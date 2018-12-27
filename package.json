@@ -1,0 +1,51 @@
+{
+  "name": "nacl-did",
+  "version": "0.0.1",
+  "description": "Resolve and manage DIDs using NaCL crypto suites",
+  "main": "lib/register.js",
+  "types": "lib/register.d.ts",
+  "author": "Pelle Braendgaard <pelle.braendgaard@consensys.net>",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "did-resolver": "0.0.6-alpha5",
+    "ed2curve": "^0.2.1",
+    "tweetnacl": "^1.0.0",
+    "tweetnacl-util": "^0.15.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "dev": "tsc --watch",
+    "format": "prettier"
+  },
+  "devDependencies": {
+    "@types/jest": "^23.3.10",
+    "jest": "^23.6.0",
+    "prettier": "^1.15.3",
+    "regenerator-runtime": "^0.12.1",
+    "ts-jest": "^23.10.5",
+    "tslint": "^5.12.0",
+    "tslint-config-prettier": "^1.17.0",
+    "tslint-eslint-rules": "^5.4.0",
+    "typescript": "^3.2.2"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json"
+    ],
+    "coverageDirectory": "./coverage/",
+    "collectCoverageFrom": [
+      "src/**/*.{ts,tsx}",
+      "!src/**/*.d.ts",
+      "!**/node_modules/**"
+    ]
+  }
+}
