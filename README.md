@@ -75,7 +75,7 @@ The resolver presents a `createIdentity()` function that returns a ES6 Promise r
 ```javascript
 import { createIdentity, loadIdentity } from 'nacl-did'
 
-const identity = await createIdentity()
+const identity = createIdentity()
 
 // the identity can be serialized using toJSON()
 localStorage.setItem('naclId', JSON.stringify(identity.toJSON()))
@@ -93,11 +93,11 @@ The `sign()` method can be used to sign raw data.
 ```javascript
 import { createIdentity, verifySignature } from 'nacl-did'
 
-const identity = await createIdentity()
+const identity = createIdentity()
 
 const message = 'Hello' // Use String, Uint8Array or Buffer
 
-const signedData = await identity.sign(message)
+const signedData = identity.sign(message)
 
 if (identity.verify(signedData)) {
   console.log('Success!')
@@ -116,12 +116,12 @@ The `createJWT()` method can be used as a minimal JWT implementation.
 ```javascript
 import { createIdentity, verifyJWT } from 'nacl-did'
 
-const identity = await createIdentity()
+const identity = createIdentity()
 
-const vc = await identity.createJWT({sub: 'did:https:uport.me', claim: { url: 'https://uport.me'}})
+const vc = identity.createJWT({sub: 'did:https:uport.me', claim: { url: 'https://uport.me'}})
 
 // verifyJWT can verify JWT's but only signed by an issuer with a nacl-did
-const {payload, doc, issuer, signer, jwt } = await verifyJWT(vc)
+const {payload, did } = await verifyJWT(vc)
 ```
 
 The built in JWT implementation only signs and verifies JWT's using the NaCL DID method. We recommend using [DID-JWT](https://github.com/uport-project/did-jwt) for a more complete solution.
@@ -135,11 +135,9 @@ Use the `encrypt({to, data})` and `decrypt({parties, cipher, nonce})` methods.
 ```javascript
 import { createIdentity } from 'nacl-did'
 
-const identity = await createIdentity()
-
-const encrypted = await identity.encrypt({to: 'did:nacl:PfFss0oSFiwSdJuZXO6EfGK2T37Bz5gPy+Dy8Hv+Izg=', data: 'hello'})
-
-const clear = await identity.decrypt(encrypted)
+const identity = createIdentity()
+const encrypted = identity.encrypt({to: 'did:nacl:PfFss0oSFiwSdJuZXO6EfGK2T37Bz5gPy+Dy8Hv+Izg=', data: 'hello'})
+const clear = identity.decrypt(encrypted)
 
 ```
 

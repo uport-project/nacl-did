@@ -34,7 +34,7 @@ interface JOSEHeader {
 }
 
 interface VerifiedJWT {
-  did: string,
+  issuer: string,
   payload: any
 }
 
@@ -135,7 +135,7 @@ export function verifyJWT(jwt: string): VerifiedJWT {
   const payload = JSON.parse(naclutil.encodeUTF8(decodeBase64Url(parts[1])))
   if (!payload.iss) throw new Error('JWT did not contain an `iss`')
   if (verifySignature({ signer: payload.iss, data: `${parts[0]}.${parts[1]}`, signature: decodeBase64Url(parts[2]) })) {
-    return { did: payload.iss, payload }
+    return { issuer: payload.iss, payload }
   } else {
     throw new Error('JWT could not be verified')
   }
@@ -159,7 +159,6 @@ export function loadIdentity(sId: SerializableNaCLIdentity): NaCLIdentity {
   if (id.did !== sId.did) throw new Error('Provided PrivateKey does not match the DID')
   return id
 }
-
 
 export default function register() {
   async function resolve(

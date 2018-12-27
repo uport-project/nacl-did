@@ -87,10 +87,12 @@ describe('createIdentity()', () => {
   describe('JWT', () => {
     describe('createJWT', () => {
       it('generates JWT', () => {
-        const jwt = id.createJWT({ sub: id.did, claims: { name: 'Bill' } })
+        const payload = { sub: id.did, claims: { name: 'Bill' } }
+        const jwt = id.createJWT(payload)
         expect(jwt).toBeDefined()
         const verified = verifyJWT(jwt)
-        expect(verified.did).toEqual(id.did)
+        expect(verified.issuer).toEqual(id.did)
+        expect(verified.payload).toEqual({ ...payload, iss: id.did })
       })
     })
   })
