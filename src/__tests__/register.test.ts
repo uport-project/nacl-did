@@ -106,8 +106,12 @@ describe('createIdentity()', () => {
     const clearText = 'Super Secret'
     const encrypted = id.encrypt(alice.did, clearText)
 
-    it('should contain the parties', () => {
-      expect(encrypted.parties).toEqual([id.did, alice.did])
+    it('should contain the to', () => {
+      expect(encrypted.to).toEqual(alice.did)
+    })
+
+    it('should contain the from', () => {
+      expect(encrypted.from).toEqual(id.did)
     })
 
     it('should contain a nonce', () => {

@@ -6,7 +6,8 @@ import { convertKeyPair, convertPublicKey } from 'ed2curve'
 export const CIPHER_VERSION = 'x25519-xsalsa20-poly1305'
 
 interface Encrypted {
-  parties: string[]
+  to: string
+  from: string
   version: string
   nonce: string
   ciphertext: string
@@ -109,17 +110,18 @@ class NaCLIdentity {
     const nonce = nacl.randomBytes(nacl.box.nonceLength)
     const ciphertext = nacl.box(normalizeClearData(data), nonce, recipientPubKey, this.encPrivateKey)
     return {
-      parties: [this.did, recipient],
+      to: recipient,
+      from: this.did,
       nonce: naclutil.encodeBase64(nonce),
       ciphertext: naclutil.encodeBase64(ciphertext),
       version: CIPHER_VERSION
     }
   }
 
-  decrypt({ parties, nonce, ciphertext, version }: Encrypted) {
+  decrypt({ from, to, nonce, ciphertext, version }: Encrypted) {
     if (version !== CIPHER_VERSION) throw new Error(`We do not support ${version}`)
-    if (!parties.find(did => did === this.did)) throw new Error(`This was not encrypted to ${this.did}`)
-    const other = parties.find(did => did !== this.did)
+    if (from !== this.did && to !== this.did) throw new Error(`This was not encrypted to ${this.did}`)
+    const other = from === this.did ? to : from
     if (!other) throw new Error('No counter party included')
     return nacl.box.open(naclutil.decodeBase64(ciphertext), naclutil.decodeBase64(nonce), didToEncPubKey(other), this.encPrivateKey)
   }
