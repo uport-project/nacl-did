@@ -1,6 +1,6 @@
 {
   "name": "nacl-did",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Resolve and manage DIDs using NaCL crypto suites",
   "main": "lib/register.js",
   "types": "lib/register.d.ts",
@@ -8,7 +8,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "did-resolver": "0.0.6-alpha5",
-    "ed2curve": "^0.2.1",
+    "ed2curve": "git+https://github.com/uport-project/ed2curve-js.git",
     "tweetnacl": "^1.0.0",
     "tweetnacl-util": "^0.15.0"
   },
@@ -27,7 +27,9 @@
     "tslint": "^5.12.0",
     "tslint-config-prettier": "^1.17.0",
     "tslint-eslint-rules": "^5.4.0",
-    "typescript": "^3.2.2"
+    "typescript": "^3.2.2",
+    "webpack": "^4.28.2",
+    "webpack-cli": "^3.1.2"
   },
   "jest": {
     "transform": {
