@@ -1,5 +1,5 @@
 import resolve from 'did-resolver'
-import register, { createIdentity, loadIdentity, verifySignature, encodeBase64Url, decodeBase64Url } from '../register'
+import register, { createIdentity, loadIdentity, verifySignature, verifyJWT, encodeBase64Url, decodeBase64Url } from '../register'
 import naclutil from 'tweetnacl-util'
 import nacl from 'tweetnacl'
 
@@ -80,6 +80,17 @@ describe('createIdentity()', () => {
             expect(verifySignature({ ...signed, signer: malory.did })).toBeFalsy()
           })
         })
+      })
+    })
+  })
+
+  describe('JWT', () => {
+    describe('createJWT', () => {
+      it('generates JWT', () => {
+        const jwt = id.createJWT({ sub: id.did, claims: { name: 'Bill' } })
+        expect(jwt).toBeDefined()
+        const verified = verifyJWT(jwt)
+        expect(verified.did).toEqual(id.did)
       })
     })
   })

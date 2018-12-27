@@ -28,6 +28,16 @@ interface SignedData {
   signature: Uint8Array
 }
 
+interface JOSEHeader {
+  type: string,
+  alg: string
+}
+
+interface VerifiedJWT {
+  did: string,
+  payload: any
+}
+
 export function normalizeClearData(data: string | Uint8Array): Uint8Array {
   if (typeof data === 'string') {
     return naclutil.decodeUTF8(data)
@@ -51,6 +61,9 @@ function pad(base64url: string): string {
 export function decodeBase64Url(base64url: string): Uint8Array {
   return naclutil.decodeBase64(pad(base64url).replace(/-/g, '+').replace(/_/g, '/'))
 }
+
+const JOSE_HEADER = { typ: 'JWT', alg: 'Ed25519' }
+const ENCODED_JOSE_HEADER = encodeBase64Url(naclutil.decodeUTF8(JSON.stringify(JOSE_HEADER)))
 
 class NaCLIdentity {
   readonly did: string
@@ -84,6 +97,12 @@ class NaCLIdentity {
     return nacl.sign.detached.verify(normalizeClearData(signed.data), signed.signature, this.publicKey)
   }
 
+  createJWT(payload: Object) {
+    const unsigned = ENCODED_JOSE_HEADER + '.' + encodeBase64Url(naclutil.decodeUTF8(JSON.stringify({ ...payload, iss: this.did })))
+    const signed = this.sign(unsigned)
+    return unsigned + '.' + encodeBase64Url(signed.signature)
+  }
+
   encrypt(recipient: string, data: string | Uint8Array): Encrypted {
     const recipientPubKey = didToEncPubKey(recipient)
     const nonce = nacl.randomBytes(nacl.box.nonceLength)
@@ -108,6 +127,18 @@ class NaCLIdentity {
 export function verifySignature(signed: SignedData): boolean {
   const publicKey = didToSignPubKey(signed.signer)
   return nacl.sign.detached.verify(normalizeClearData(signed.data), signed.signature, publicKey)
+}
+
+export function verifyJWT(jwt: string): VerifiedJWT {
+  const parts = jwt.split('.')
+  if (parts[0] !== ENCODED_JOSE_HEADER) throw new Error('Incorrect JWT Type')
+  const payload = JSON.parse(naclutil.encodeUTF8(decodeBase64Url(parts[1])))
+  if (!payload.iss) throw new Error('JWT did not contain an `iss`')
+  if (verifySignature({ signer: payload.iss, data: `${parts[0]}.${parts[1]}`, signature: decodeBase64Url(parts[2]) })) {
+    return { did: payload.iss, payload }
+  } else {
+    throw new Error('JWT could not be verified')
+  }
 }
 
 function didToSignPubKey(did: string) {
