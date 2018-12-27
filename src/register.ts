@@ -98,7 +98,8 @@ class NaCLIdentity {
   }
 
   createJWT(payload: Object) {
-    const unsigned = ENCODED_JOSE_HEADER + '.' + encodeBase64Url(naclutil.decodeUTF8(JSON.stringify({ ...payload, iss: this.did })))
+    const iat = Math.floor(Date.now() / 1000)
+    const unsigned = ENCODED_JOSE_HEADER + '.' + encodeBase64Url(naclutil.decodeUTF8(JSON.stringify({ ...payload, iss: this.did, iat })))
     const signed = this.sign(unsigned)
     return unsigned + '.' + encodeBase64Url(signed.signature)
   }

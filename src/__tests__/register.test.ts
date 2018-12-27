@@ -2,6 +2,10 @@ import resolve from 'did-resolver'
 import register, { createIdentity, loadIdentity, verifySignature, verifyJWT, encodeBase64Url, decodeBase64Url } from '../register'
 import naclutil from 'tweetnacl-util'
 import nacl from 'tweetnacl'
+import MockDate from 'mockdate'
+
+const NOW = 1485321133
+MockDate.set(NOW * 1000)
 
 describe('nacl did resolver', () => {
   const did: string = 'did:nacl:Md8JiMIwsapml_FtQ2ngnGftNP5UmVCAUuhnLyAsPxI'
@@ -92,7 +96,7 @@ describe('createIdentity()', () => {
         expect(jwt).toBeDefined()
         const verified = verifyJWT(jwt)
         expect(verified.issuer).toEqual(id.did)
-        expect(verified.payload).toEqual({ ...payload, iss: id.did })
+        expect(verified.payload).toEqual({ ...payload, iss: id.did, iat: NOW })
       })
     })
   })
