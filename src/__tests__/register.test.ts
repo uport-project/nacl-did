@@ -1,5 +1,5 @@
 import resolve from 'did-resolver'
-import register, { createIdentity, loadIdentity, verifySignature, verifyJWT, encodeBase64Url, decodeBase64Url } from '../register'
+import register, { createIdentity, loadIdentity, verifySignature, verifyJWT, encodeBase64Url, decodeBase64Url, didToEncPubKey } from '../register'
 import naclutil from 'tweetnacl-util'
 import nacl from 'tweetnacl'
 import MockDate from 'mockdate'
@@ -137,6 +137,101 @@ describe('createIdentity()', () => {
       describe('recipient', () => {
         it('can decrypt', () => {
           expect(naclutil.encodeUTF8(<Uint8Array>alice.decrypt(encrypted))).toEqual(clearText)
+        })
+      })
+    })
+  })
+
+  describe('openSession', async () => {
+    const alice = createIdentity()
+    const session = await id.openSession(alice.did)
+
+    describe('meta data', () => {
+      describe('from property', () => {
+        it('should be set to my DID', () => {
+          expect(session.from).toEqual(id.did)
+        })
+      })
+
+      describe('to property', () => {
+        it('should be set to recipients DID', () => {
+          expect(session.to).toEqual(alice.did)
+        })
+      })
+    })
+
+    describe('encrypt', () => {
+      const clearText = 'Secret Stuff'
+      const encrypted = session.encrypt(clearText)
+
+      describe('meta data', () => {
+        describe('from property', () => {
+          it('should be set to my DID', () => {
+            expect(encrypted.from).toEqual(id.did)
+          })
+        })
+
+        describe('to property', () => {
+          it('should be set to recipients DID', () => {
+            expect(encrypted.to).toEqual(alice.did)
+          })
+        })
+
+        describe('toPublicKey', () => {
+          it('should set toPublicKey', () => {
+            expect(encrypted.toPublicKey).toEqual(didToEncPubKey(alice.did))
+          })
+        })
+
+        it('should contain a version', () => {
+          expect(encrypted.version).toEqual('x25519-xsalsa20-poly1305')
+        })
+      })
+
+      describe('decrypt', () => {
+        describe('using session', () => {
+          it('should decrypt', () => {
+            expect(naclutil.encodeUTF8(<Uint8Array>session.decrypt(encrypted))).toEqual(clearText)
+          })
+        })
+
+        describe('using sender identity', () => {
+          it('should decrypt', () => {
+            expect(naclutil.encodeUTF8(<Uint8Array>id.decrypt(encrypted))).toEqual(clearText)
+          })
+        })
+
+        describe('using recipient identity', () => {
+          it('should decrypt', () => {
+            expect(naclutil.encodeUTF8(<Uint8Array>alice.decrypt(encrypted))).toEqual(clearText)
+          })
+        })
+      })
+    })
+
+    describe('isOpen()', () => {
+      it('should be open', () => {
+        expect(session.isOpen()).toBeTruthy()
+      })
+    })
+
+    describe('close()', () => {
+      session.close()
+
+      it('should not be open', () => {
+        expect(session.isOpen).toBeFalsy()
+      })
+
+      describe('encrypt', () => {
+        it('should thrown an error', () => {
+          expect(() => session.encrypt('hello')).toThrowError(`Session with ${alice.did} has been closed`)
+        })
+      })
+
+      describe('decrypt', () => {
+        it('should thrown an error', () => {
+          const encrypted = id.encrypt(alice.did, 'hello')
+          expect(() => session.decrypt(encrypted)).toThrowError(`Session with ${alice.did} has been closed`)
         })
       })
     })

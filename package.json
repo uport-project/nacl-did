@@ -6,6 +6,10 @@
   "types": "lib/register.d.ts",
   "author": "Pelle Braendgaard <pelle.braendgaard@consensys.net>",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/uport-project/nacl-did.git"
+  },
   "dependencies": {
     "did-resolver": "0.0.6-alpha5",
     "ed2curve": "git+https://github.com/uport-project/ed2curve-js.git",
