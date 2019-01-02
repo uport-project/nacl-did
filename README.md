@@ -136,7 +136,7 @@ Use the `encrypt(to, data)` and `decrypt(encrypted)` methods.
 import { createIdentity } from 'nacl-did'
 
 const identity = createIdentity()
-const encrypted = identity.encrypt('did:nacl:PfFss0oSFiwSdJuZXO6EfGK2T37Bz5gPy+Dy8Hv+Izg=', 'hello'})
+const encrypted = await identity.encrypt('did:nacl:PfFss0oSFiwSdJuZXO6EfGK2T37Bz5gPy+Dy8Hv+Izg=', 'hello'})
 const clear = identity.decrypt(encrypted)
 
 ```
@@ -152,7 +152,7 @@ import { createIdentity } from 'nacl-did'
 
 const identity = createIdentity()
 const session = identity.openSession('did:nacl:PfFss0oSFiwSdJuZXO6EfGK2T37Bz5gPy+Dy8Hv+Izg=')
-const encrypted = session.encrypt('hello')
+const encrypted = await session.encrypt('hello')
 const clear = session.decrypt(encrypted)
 ```
 
