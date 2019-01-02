@@ -25,6 +25,7 @@
   "devDependencies": {
     "@types/jest": "^23.3.10",
     "@types/mockdate": "^2.0.0",
+    "ethr-did-resolver": "^0.2.0-alpha1",
     "jest": "^23.6.0",
     "mockdate": "^2.0.2",
     "prettier": "^1.15.3",

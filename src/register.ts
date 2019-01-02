@@ -12,7 +12,7 @@ interface EncryptedTemplate {
   toPublicKey: string
 }
 
-interface Encrypted extends EncryptedTemplate {
+export interface Encrypted extends EncryptedTemplate {
   nonce: string
   ciphertext: string,
 }
@@ -70,7 +70,7 @@ export function decodeBase64Url(base64url: string): Uint8Array {
 const JOSE_HEADER = { typ: 'JWT', alg: 'Ed25519' }
 const ENCODED_JOSE_HEADER = encodeBase64Url(naclutil.decodeUTF8(JSON.stringify(JOSE_HEADER)))
 
-class NaCLIdentity {
+export class NaCLIdentity {
   readonly did: string
   private readonly privateKey: Uint8Array
   private readonly publicKey: Uint8Array
@@ -109,10 +109,15 @@ class NaCLIdentity {
     return unsigned + '.' + encodeBase64Url(signed.signature)
   }
 
-  async openSession(to: string): Promise<EncryptedSession> {
+  async openSession(to: string, createEphemeralPublicKeyIfMissing = false): Promise<EncryptedSession> {
     // If recipient doesn't have a valid publicKey create an ephemeral one
     // This means that I at least have the session encrypted to myself
-    const publicKey = (await resolveEncryptionPublicKey(to) || nacl.randomBytes(32))
+    let publicKey = await resolveEncryptionPublicKey(to)
+    if (!publicKey) {
+      if (createEphemeralPublicKeyIfMissing) {
+        publicKey = nacl.randomBytes(32)
+      } else throw new Error(`Recipient DID ${to} does not have a valid encryption publicKey`)
+    }
     return new EncryptedSession(this.did, to, naclutil.encodeBase64(publicKey), nacl.box.before(publicKey, this.encPrivateKey))
   }
 
@@ -139,7 +144,7 @@ class NaCLIdentity {
   }
 }
 
-class EncryptedSession {
+export class EncryptedSession {
   public readonly from: string
   public readonly to: string
   private readonly toPublicKey: string
