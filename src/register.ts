@@ -43,6 +43,20 @@ interface VerifiedJWT {
   payload: any
 }
 
+export interface RandomBytesSource {
+  (length: number): Promise<Uint8Array>
+}
+
+async function naclRandomBytes(length: number): Promise<Uint8Array> {
+  return nacl.randomBytes(length)
+}
+
+let randomBytes: RandomBytesSource = naclRandomBytes
+
+export function setRandomBytesSource(source: RandomBytesSource) {
+  randomBytes = source
+}
+
 export function normalizeClearData(data: string | Uint8Array): Uint8Array {
   if (typeof data === 'string') {
     return naclutil.decodeUTF8(data)
@@ -121,9 +135,9 @@ export class NaCLIdentity {
     return new EncryptedSession(this.did, to, naclutil.encodeBase64(publicKey), nacl.box.before(publicKey, this.encPrivateKey))
   }
 
-  encrypt(to: string, data: string | Uint8Array): Encrypted {
+  async encrypt(to: string, data: string | Uint8Array): Promise<Encrypted> {
     const toPubKey = didToEncPubKey(to)
-    const nonce = nacl.randomBytes(nacl.box.nonceLength)
+    const nonce = await randomBytes(nacl.box.nonceLength)
     const ciphertext = nacl.box(normalizeClearData(data), nonce, toPubKey, this.encPrivateKey)
     return {
       to: to,
@@ -164,9 +178,9 @@ export class EncryptedSession {
     }
   }
 
-  encrypt(data: string | Uint8Array): Encrypted {
+  async encrypt(data: string | Uint8Array): Promise<Encrypted> {
     if (!this.isOpen()) throw new Error(`Session with ${this.to} has been closed`)
-    const nonce = nacl.randomBytes(nacl.box.nonceLength)
+    const nonce = await randomBytes(nacl.box.nonceLength)
     const ciphertext = nacl.box.after(normalizeClearData(data), nonce, this.sharedKey)
     return {
       ...this.template,

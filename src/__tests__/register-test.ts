@@ -101,10 +101,11 @@ describe('createIdentity()', () => {
     })
   })
 
-  describe('encrypt()', () => {
+  describe('encrypt()', async () => {
     const alice = createIdentity()
     const clearText = 'Super Secret'
-    const encrypted = id.encrypt(alice.did, clearText)
+    let encrypted: Encrypted
+    beforeAll(async () => encrypted = await id.encrypt(alice.did, clearText))
 
     it('should contain the to', () => {
       expect(encrypted.to).toEqual(alice.did)
@@ -168,8 +169,8 @@ describe('createIdentity()', () => {
       describe('encrypt', () => {
         const clearText = 'Secret Stuff'
         let encrypted: Encrypted
-        beforeAll(() => {
-          encrypted = session.encrypt(clearText)
+        beforeAll(async () => {
+          encrypted = await session.encrypt(clearText)
         })
 
         describe('meta data', () => {
@@ -231,14 +232,19 @@ describe('createIdentity()', () => {
         })
 
         describe('encrypt', () => {
-          it('should thrown an error', () => {
-            expect(() => session.encrypt('hello')).toThrowError(`Session with ${alice.did} has been closed`)
+          it('should throw an error', async () => {
+            try {
+              const encrypted = await session.encrypt('hello')
+              return expect(encrypted).toBeUndefined()
+            } catch (error) {
+              return expect(error.message).toEqual(`Session with ${alice.did} has been closed`)
+            }
           })
         })
 
         describe('decrypt', () => {
-          it('should thrown an error', () => {
-            const encrypted = id.encrypt(alice.did, 'hello')
+          it('should thrown an error', async () => {
+            const encrypted = await id.encrypt(alice.did, 'hello')
             expect(() => session.decrypt(encrypted)).toThrowError(`Session with ${alice.did} has been closed`)
           })
         })
