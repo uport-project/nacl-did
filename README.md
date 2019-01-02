@@ -130,15 +130,30 @@ The built in JWT implementation only signs and verifies JWT's using the NaCL DID
 
 The NaCL DID method supports public key encryption using NaCL's `x25519-xsalsa20-poly1305` algorithm.
 
-Use the `encrypt({to, data})` and `decrypt({parties, cipher, nonce})` methods.
+Use the `encrypt(to, data)` and `decrypt(encrypted)` methods.
 
 ```javascript
 import { createIdentity } from 'nacl-did'
 
 const identity = createIdentity()
-const encrypted = identity.encrypt({to: 'did:nacl:PfFss0oSFiwSdJuZXO6EfGK2T37Bz5gPy+Dy8Hv+Izg=', data: 'hello'})
+const encrypted = await identity.encrypt('did:nacl:PfFss0oSFiwSdJuZXO6EfGK2T37Bz5gPy+Dy8Hv+Izg=', 'hello'})
 const clear = identity.decrypt(encrypted)
 
+```
+
+## Encryption Sessions
+
+In many applications you will be encrypting data repeatedly to the same recipient. For these it is more eficient to open an Encryption Session.
+
+Use the `openSession(toDid)` method.
+
+```javascript
+import { createIdentity } from 'nacl-did'
+
+const identity = createIdentity()
+const session = identity.openSession('did:nacl:PfFss0oSFiwSdJuZXO6EfGK2T37Bz5gPy+Dy8Hv+Izg=')
+const encrypted = await session.encrypt('hello')
+const clear = session.decrypt(encrypted)
 ```
 
 ## Resolving a DID document
