@@ -1,16 +1,20 @@
-import { registerMethod, DIDDocument, ParsedDID, parse } from 'did-resolver'
+import resolve, { registerMethod, DIDDocument, ParsedDID, parse } from 'did-resolver'
 import nacl from 'tweetnacl'
 import naclutil from 'tweetnacl-util'
 import { convertKeyPair, convertPublicKey } from 'ed2curve'
 
 export const CIPHER_VERSION = 'x25519-xsalsa20-poly1305'
 
-interface Encrypted {
+interface EncryptedTemplate {
   to: string
   from: string
   version: string
+  toPublicKey: string
+}
+
+export interface Encrypted extends EncryptedTemplate {
   nonce: string
-  ciphertext: string
+  ciphertext: string,
 }
 
 interface NaCLKeyPair {
@@ -37,6 +41,20 @@ interface JOSEHeader {
 interface VerifiedJWT {
   issuer: string,
   payload: any
+}
+
+export interface RandomBytesSource {
+  (length: number): Promise<Uint8Array>
+}
+
+async function naclRandomBytes(length: number): Promise<Uint8Array> {
+  return nacl.randomBytes(length)
+}
+
+let randomBytes: RandomBytesSource = naclRandomBytes
+
+export function setRandomBytesSource(source: RandomBytesSource) {
+  randomBytes = source
 }
 
 export function normalizeClearData(data: string | Uint8Array): Uint8Array {
@@ -66,7 +84,7 @@ export function decodeBase64Url(base64url: string): Uint8Array {
 const JOSE_HEADER = { typ: 'JWT', alg: 'Ed25519' }
 const ENCODED_JOSE_HEADER = encodeBase64Url(naclutil.decodeUTF8(JSON.stringify(JOSE_HEADER)))
 
-class NaCLIdentity {
+export class NaCLIdentity {
   readonly did: string
   private readonly privateKey: Uint8Array
   private readonly publicKey: Uint8Array
@@ -105,13 +123,26 @@ class NaCLIdentity {
     return unsigned + '.' + encodeBase64Url(signed.signature)
   }
 
-  encrypt(recipient: string, data: string | Uint8Array): Encrypted {
-    const recipientPubKey = didToEncPubKey(recipient)
-    const nonce = nacl.randomBytes(nacl.box.nonceLength)
-    const ciphertext = nacl.box(normalizeClearData(data), nonce, recipientPubKey, this.encPrivateKey)
+  async openSession(to: string, createEphemeralPublicKeyIfMissing = false): Promise<EncryptedSession> {
+    // If recipient doesn't have a valid publicKey create an ephemeral one
+    // This means that I at least have the session encrypted to myself
+    let publicKey = await resolveEncryptionPublicKey(to)
+    if (!publicKey) {
+      if (createEphemeralPublicKeyIfMissing) {
+        publicKey = nacl.randomBytes(32)
+      } else throw new Error(`Recipient DID ${to} does not have a valid encryption publicKey`)
+    }
+    return new EncryptedSession(this.did, to, naclutil.encodeBase64(publicKey), nacl.box.before(publicKey, this.encPrivateKey))
+  }
+
+  async encrypt(to: string, data: string | Uint8Array): Promise<Encrypted> {
+    const toPubKey = didToEncPubKey(to)
+    const nonce = await randomBytes(nacl.box.nonceLength)
+    const ciphertext = nacl.box(normalizeClearData(data), nonce, toPubKey, this.encPrivateKey)
     return {
-      to: recipient,
+      to: to,
       from: this.did,
+      toPublicKey: naclutil.encodeBase64(toPubKey),
       nonce: naclutil.encodeBase64(nonce),
       ciphertext: naclutil.encodeBase64(ciphertext),
       version: CIPHER_VERSION
@@ -124,6 +155,54 @@ class NaCLIdentity {
     const other = from === this.did ? to : from
     if (!other) throw new Error('No counter party included')
     return nacl.box.open(naclutil.decodeBase64(ciphertext), naclutil.decodeBase64(nonce), didToEncPubKey(other), this.encPrivateKey)
+  }
+}
+
+export class EncryptedSession {
+  public readonly from: string
+  public readonly to: string
+  private readonly toPublicKey: string
+  private readonly template: EncryptedTemplate
+  private sharedKey: Uint8Array
+
+  constructor(from: string, to: string, toPublicKey: string, sharedKey: Uint8Array) {
+    this.from = from
+    this.to = to
+    this.sharedKey = sharedKey
+    this.toPublicKey = toPublicKey
+    this.template = {
+      toPublicKey,
+      from,
+      to,
+      version: CIPHER_VERSION
+    }
+  }
+
+  async encrypt(data: string | Uint8Array): Promise<Encrypted> {
+    if (!this.isOpen()) throw new Error(`Session with ${this.to} has been closed`)
+    const nonce = await randomBytes(nacl.box.nonceLength)
+    const ciphertext = nacl.box.after(normalizeClearData(data), nonce, this.sharedKey)
+    return {
+      ...this.template,
+      nonce: naclutil.encodeBase64(nonce),
+      ciphertext: naclutil.encodeBase64(ciphertext),
+    }
+  }
+
+  decrypt({ from, to, nonce, ciphertext, version }: Encrypted) {
+    if (!this.isOpen()) throw new Error(`Session with ${this.to} has been closed`)
+    if (version !== CIPHER_VERSION) throw new Error(`We do not support ${version}`)
+    if (from !== this.from && to !== this.to) throw new Error(`This was not encrypted to us`)
+    return nacl.box.open.after(naclutil.decodeBase64(ciphertext), naclutil.decodeBase64(nonce), this.sharedKey)
+  }
+
+  isOpen() {
+    return this.sharedKey.length > 0
+  }
+
+  close() {
+    this.sharedKey.fill(0)
+    this.sharedKey = new Uint8Array(0)
   }
 }
 
@@ -149,7 +228,16 @@ function didToSignPubKey(did: string) {
   return decodeBase64Url(parsed.id)
 }
 
-function didToEncPubKey(did: string) {
+async function resolveEncryptionPublicKey(did: string): Promise<Uint8Array | undefined> {
+  const doc = await resolve(did)
+  if (doc) {
+    const publicKey = doc.publicKey.find(pub => pub.type === 'Curve25519EncryptionPublicKey')
+    if (publicKey && publicKey.publicKeyBase64) return naclutil.decodeBase64(publicKey.publicKeyBase64)
+  }
+}
+
+export function didToEncPubKey(did: string): Uint8Array {
+  if (!did.match(/^did:nacl:/)) throw new Error('Only nacl dids are supported')
   return convertPublicKey(didToSignPubKey(did))
 }
 
