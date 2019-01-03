@@ -1,6 +1,6 @@
 {
   "name": "nacl-did",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Resolve and manage DIDs using NaCL crypto suites",
   "main": "lib/register.js",
   "types": "lib/register.d.ts",
@@ -19,13 +19,13 @@
   "scripts": {
     "build:es5": "tsc",
     "build:browser": "./node_modules/.bin/webpack",
-    "build": "npm run build:es5 && npm run test && npm run build:browser && npm run build:docs",
+    "build": "npm run build:es5 && npm run test && npm run build:browser",
     "test": "./node_modules/.bin/jest",
     "test:ci": "./node_modules/.bin/jest -u --coverage",
     "dev": "tsc --watch",
     "format": "prettier",
     "build:docs": "./node_modules/.bin/typedoc --theme markdown --out docs/ src/register.ts ./index.d.ts",
-    "prepublish": "npm run build"
+    "prepare": "npm run build"
   },
   "devDependencies": {
     "@types/jest": "^23.3.10",

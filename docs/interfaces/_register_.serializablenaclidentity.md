@@ -23,7 +23,7 @@
 
 **● did**: *`string`*
 
-*Defined in [register.ts:26](https://github.com/uport-project/nacl-did/blob/323afe1/src/register.ts#L26)*
+*Defined in [register.ts:26](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L26)*
 
 ___
 <a id="privatekey"></a>
@@ -32,7 +32,7 @@ ___
 
 **● privateKey**: *`string`*
 
-*Defined in [register.ts:27](https://github.com/uport-project/nacl-did/blob/323afe1/src/register.ts#L27)*
+*Defined in [register.ts:27](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L27)*
 
 ___
 

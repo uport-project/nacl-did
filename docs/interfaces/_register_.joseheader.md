@@ -23,7 +23,7 @@
 
 **● alg**: *`string`*
 
-*Defined in [register.ts:38](https://github.com/uport-project/nacl-did/blob/323afe1/src/register.ts#L38)*
+*Defined in [register.ts:38](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L38)*
 
 ___
 <a id="type"></a>
@@ -32,7 +32,7 @@ ___
 
 **● type**: *`string`*
 
-*Defined in [register.ts:37](https://github.com/uport-project/nacl-did/blob/323afe1/src/register.ts#L37)*
+*Defined in [register.ts:37](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L37)*
 
 ___
 

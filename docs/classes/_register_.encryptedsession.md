@@ -37,7 +37,7 @@
 
 ⊕ **new EncryptedSession**(from: *`string`*, to: *`string`*, toPublicKey: *`string`*, sharedKey: *`Uint8Array`*): [EncryptedSession](_register_.encryptedsession.md)
 
-*Defined in [register.ts:227](https://github.com/uport-project/nacl-did/blob/323afe1/src/register.ts#L227)*
+*Defined in [register.ts:227](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L227)*
 
 **Parameters:**
 
@@ -60,7 +60,7 @@ ___
 
 **● from**: *`string`*
 
-*Defined in [register.ts:223](https://github.com/uport-project/nacl-did/blob/323afe1/src/register.ts#L223)*
+*Defined in [register.ts:223](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L223)*
 
 ___
 <a id="sharedkey"></a>
@@ -69,7 +69,7 @@ ___
 
 **● sharedKey**: *`Uint8Array`*
 
-*Defined in [register.ts:227](https://github.com/uport-project/nacl-did/blob/323afe1/src/register.ts#L227)*
+*Defined in [register.ts:227](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L227)*
 
 ___
 <a id="template"></a>
@@ -78,7 +78,7 @@ ___
 
 **● template**: *[EncryptedTemplate](../interfaces/_register_.encryptedtemplate.md)*
 
-*Defined in [register.ts:226](https://github.com/uport-project/nacl-did/blob/323afe1/src/register.ts#L226)*
+*Defined in [register.ts:226](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L226)*
 
 ___
 <a id="to"></a>
@@ -87,7 +87,7 @@ ___
 
 **● to**: *`string`*
 
-*Defined in [register.ts:224](https://github.com/uport-project/nacl-did/blob/323afe1/src/register.ts#L224)*
+*Defined in [register.ts:224](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L224)*
 
 ___
 <a id="topublickey"></a>
@@ -96,7 +96,7 @@ ___
 
 **● toPublicKey**: *`string`*
 
-*Defined in [register.ts:225](https://github.com/uport-project/nacl-did/blob/323afe1/src/register.ts#L225)*
+*Defined in [register.ts:225](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L225)*
 
 ___
 
@@ -108,7 +108,7 @@ ___
 
 ▸ **close**(): `void`
 
-*Defined in [register.ts:271](https://github.com/uport-project/nacl-did/blob/323afe1/src/register.ts#L271)*
+*Defined in [register.ts:271](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L271)*
 
 **Returns:** `void`
 
@@ -119,7 +119,7 @@ ___
 
 ▸ **decrypt**(__namedParameters: *`object`*): `null` | `Uint8Array`
 
-*Defined in [register.ts:260](https://github.com/uport-project/nacl-did/blob/323afe1/src/register.ts#L260)*
+*Defined in [register.ts:260](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L260)*
 
 Decrypt data from counter party
 
@@ -144,7 +144,7 @@ ___
 
 ▸ **encrypt**(data: *`string` | `Uint8Array`*): `Promise`<[Encrypted](../interfaces/_register_.encrypted.md)>
 
-*Defined in [register.ts:246](https://github.com/uport-project/nacl-did/blob/323afe1/src/register.ts#L246)*
+*Defined in [register.ts:246](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L246)*
 
 Encrypt data to recipient
 
@@ -163,7 +163,7 @@ ___
 
 ▸ **isOpen**(): `boolean`
 
-*Defined in [register.ts:267](https://github.com/uport-project/nacl-did/blob/323afe1/src/register.ts#L267)*
+*Defined in [register.ts:267](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L267)*
 
 **Returns:** `boolean`
 
