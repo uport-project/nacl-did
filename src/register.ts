@@ -43,6 +43,11 @@ interface VerifiedJWT {
   payload: any
 }
 
+/**
+ * Implement this to use a custom async random source
+ * @param length is the length of the Random Bytes requested.
+ * @returns a Promise returning a Uint8Array
+ */
 export interface RandomBytesSource {
   (length: number): Promise<Uint8Array>
 }
@@ -53,10 +58,17 @@ async function naclRandomBytes(length: number): Promise<Uint8Array> {
 
 let randomBytes: RandomBytesSource = naclRandomBytes
 
+/**
+ * Sets a system wide random byte source
+ * @param source an async function generating random bytes
+ */
 export function setRandomBytesSource(source: RandomBytesSource) {
   randomBytes = source
 }
 
+/**
+ * Takes data which could be a string or a Uint8Array and normalizes it into a Uint8Array
+ */
 export function normalizeClearData(data: string | Uint8Array): Uint8Array {
   if (typeof data === 'string') {
     return naclutil.decodeUTF8(data)
@@ -65,6 +77,10 @@ export function normalizeClearData(data: string | Uint8Array): Uint8Array {
   }
 }
 
+/**
+ * Encode a byte array into a base64 url encoded string
+ * @param data data to encode
+ */
 export function encodeBase64Url(data: Uint8Array): string {
   return naclutil.encodeBase64(data).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '')
 }
@@ -77,6 +93,12 @@ function pad(base64url: string): string {
     default: throw new Error('Invalid base64url encoded string')
   }
 }
+
+
+/**
+ * Decodes a base64url encoded string into a Uint8Array (byte array)
+ * @param base64url base64url encoded string
+ */
 export function decodeBase64Url(base64url: string): Uint8Array {
   return naclutil.decodeBase64(pad(base64url).replace(/-/g, '+').replace(/_/g, '/'))
 }
@@ -84,6 +106,9 @@ export function decodeBase64Url(base64url: string): Uint8Array {
 const JOSE_HEADER = { typ: 'JWT', alg: 'Ed25519' }
 const ENCODED_JOSE_HEADER = encodeBase64Url(naclutil.decodeUTF8(JSON.stringify(JOSE_HEADER)))
 
+/**
+ * Encapsulates the functionality of an identity using the `nacl-did` method
+ */
 export class NaCLIdentity {
   readonly did: string
   private readonly privateKey: Uint8Array
@@ -91,6 +116,11 @@ export class NaCLIdentity {
   readonly publicKey: Uint8Array
   readonly encPublicKey: Uint8Array
 
+  /**
+   * Create a new NaCL Identity for a KeyPair
+   * 
+   * @param kp a KeyPair generated prior from nacl.box.keyPair()
+   */
   constructor(kp: NaCLKeyPair) {
     this.did = `did:nacl:${encodeBase64Url(kp.publicKey)}`
     this.privateKey = kp.secretKey
@@ -100,10 +130,17 @@ export class NaCLIdentity {
     this.encPrivateKey = encKP.secretKey
   }
 
+  /**
+   * Serializes NaclDID to just it's base64 encoded private key and DID
+   */
   toJSON(): SerializableNaCLIdentity {
     return { did: this.did, privateKey: naclutil.encodeBase64(this.privateKey) }
   }
 
+  /**
+   * Signs data and returns the data, did and signature
+   * @param data
+   */
   sign(data: string | Uint8Array): SignedData {
     return {
       data,
@@ -112,10 +149,18 @@ export class NaCLIdentity {
     }
   }
 
+  /**
+   * Verifies that Signed Data was signed by this identity
+   * @param signed 
+   */
   verify(signed: SignedData): boolean {
     return nacl.sign.detached.verify(normalizeClearData(signed.data), signed.signature, this.publicKey)
   }
 
+  /**
+   * Creates a signed JWT using the following header `{ typ: 'JWT', alg: 'Ed25519' }`
+   * @param payload Any valid JSON encodeable JS object
+   */
   createJWT(payload: Object) {
     const iat = Math.floor(Date.now() / 1000)
     const unsigned = ENCODED_JOSE_HEADER + '.' + encodeBase64Url(naclutil.decodeUTF8(JSON.stringify({ ...payload, iss: this.did, iat })))
@@ -123,14 +168,20 @@ export class NaCLIdentity {
     return unsigned + '.' + encodeBase64Url(signed.signature)
   }
 
-  async openSession(to: string, createEphemeralPublicKeyIfMissing: boolean | string = false): Promise<EncryptedSession> {
+  /**
+   * Opens an efficient session for encrypting and decrypting messages between this and another DID.
+   * 
+   * @param to DID of recipient
+   * @param overridePublicKey If DID method does not contain an encryption public key use this key or `true` to create a new ephemeral key
+   */
+  async openSession(to: string, overridePublicKey: boolean | string = false): Promise<EncryptedSession> {
     // If recipient doesn't have a valid publicKey create an ephemeral one
     // This means that I at least have the session encrypted to myself
     let publicKey = await resolveEncryptionPublicKey(to)
     if (!publicKey) {
-      if (createEphemeralPublicKeyIfMissing) {
-        if (typeof createEphemeralPublicKeyIfMissing === 'string') {
-          publicKey = naclutil.decodeBase64(<string>createEphemeralPublicKeyIfMissing)
+      if (overridePublicKey) {
+        if (typeof overridePublicKey === 'string') {
+          publicKey = naclutil.decodeBase64(<string>overridePublicKey)
         } else {
           publicKey = nacl.randomBytes(32)
         }
@@ -139,6 +190,11 @@ export class NaCLIdentity {
     return new EncryptedSession(this.did, to, naclutil.encodeBase64(publicKey), nacl.box.before(publicKey, this.encPrivateKey))
   }
 
+  /**
+   * Encrypt a single message to send to a recipient
+   * @param to DID of recipient
+   * @param data Data to encrypt
+   */
   async encrypt(to: string, data: string | Uint8Array): Promise<Encrypted> {
     const toPubKey = didToEncPubKey(to)
     const nonce = await randomBytes(nacl.box.nonceLength)
@@ -153,6 +209,7 @@ export class NaCLIdentity {
     }
   }
 
+  // Decrypt a single message
   decrypt({ from, to, nonce, ciphertext, version }: Encrypted) {
     if (version !== CIPHER_VERSION) throw new Error(`We do not support ${version}`)
     if (from !== this.did && to !== this.did) throw new Error(`This was not encrypted to ${this.did}`)
@@ -182,6 +239,10 @@ export class EncryptedSession {
     }
   }
 
+  /**
+   * Encrypt data to recipient
+   * @param data 
+   */
   async encrypt(data: string | Uint8Array): Promise<Encrypted> {
     if (!this.isOpen()) throw new Error(`Session with ${this.to} has been closed`)
     const nonce = await randomBytes(nacl.box.nonceLength)
@@ -193,6 +254,9 @@ export class EncryptedSession {
     }
   }
 
+  /**
+   * Decrypt data from counter party
+   */
   decrypt({ from, to, nonce, ciphertext, version }: Encrypted) {
     if (!this.isOpen()) throw new Error(`Session with ${this.to} has been closed`)
     if (version !== CIPHER_VERSION) throw new Error(`We do not support ${version}`)
@@ -210,11 +274,19 @@ export class EncryptedSession {
   }
 }
 
+/**
+ * Verify Signature of Signed Data
+ * @param signed 
+ */
 export function verifySignature(signed: SignedData): boolean {
   const publicKey = didToSignPubKey(signed.signer)
   return nacl.sign.detached.verify(normalizeClearData(signed.data), signed.signature, publicKey)
 }
 
+/**
+ * Verify JWT of type `{ typ: 'JWT', alg: 'Ed25519' }`
+ * @param jwt 
+ */
 export function verifyJWT(jwt: string): VerifiedJWT {
   const parts = jwt.split('.')
   if (parts[0] !== ENCODED_JOSE_HEADER) throw new Error('Incorrect JWT Type')
@@ -245,16 +317,26 @@ export function didToEncPubKey(did: string): Uint8Array {
   return convertPublicKey(didToSignPubKey(did))
 }
 
+/**
+ * Create a new NaCLIDentity
+ */
 export function createIdentity(): NaCLIdentity {
   return new NaCLIdentity(nacl.sign.keyPair())
 }
 
+/**
+ * Instantiates a Serialized NaCLIDentity
+ * @param sId 
+ */
 export function loadIdentity(sId: SerializableNaCLIdentity): NaCLIdentity {
   const id = new NaCLIdentity(nacl.sign.keyPair.fromSecretKey(naclutil.decodeBase64(sId.privateKey)))
   if (id.did !== sId.did) throw new Error('Provided PrivateKey does not match the DID')
   return id
 }
 
+/**
+ * Registers `nacl` DID resolver
+ */
 export default function register() {
   async function resolve(
     did: string,
