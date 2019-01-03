@@ -250,15 +250,53 @@ describe('createIdentity()', () => {
         })
       })
     })
+
     describe('non nacl did', () => {
       describe('recipient does not have EncPublicKey', () => {
         const ethr = 'did:ethr:0x2Cc31912B2b0f3075A87b3640923D45A26cef3Ee'
         beforeAll(registerEthrDid)
 
         describe('with override set to true', () => {
-          it('should generate an ephemeral public key', () => {
-            return expect(id.openSession(ethr, true)).resolves.toBeDefined()
+          let session: EncryptedSession
+          beforeAll(async () => {
+            session = await id.openSession(ethr, true)
           })
+          it('should generate an ephemeral public key', () => {
+            return expect(session.toPublicKey).toBeDefined()
+          })
+        })
+
+        describe('with override set to a encPublicKey', () => {
+          const encKP = nacl.box.keyPair()
+          const encPublicKey = naclutil.encodeBase64(encKP.publicKey)
+          let session: EncryptedSession
+          beforeAll(async () => {
+            session = await id.openSession(ethr, encPublicKey)
+          })
+
+          it('should use passed in encryption key', () => {
+            return expect(session.toPublicKey).toEqual(encPublicKey)
+          })
+
+          describe('encryption', () => {
+            const clearText = 'Secret Stuff'
+            let encrypted: Encrypted
+
+            beforeAll(async () => encrypted = await session.encrypt(clearText))
+
+            it('should encrypt correctly', async () => {
+              expect(naclutil.encodeUTF8(<Uint8Array>nacl.box.open(
+                naclutil.decodeBase64(encrypted.ciphertext),
+                naclutil.decodeBase64(encrypted.nonce),
+                id.encPublicKey,
+                encKP.secretKey))).toEqual(clearText)
+            })
+
+            it('should set encPubKey', () => {
+              expect(encrypted.toPublicKey).toEqual(encPublicKey)
+            })
+          })
+
         })
 
         describe('default behavior', () => {
