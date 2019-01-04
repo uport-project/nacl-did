@@ -254,7 +254,10 @@ describe('createIdentity()', () => {
     describe('non nacl did', () => {
       describe('recipient does not have EncPublicKey', () => {
         const ethr = 'did:ethr:0x2Cc31912B2b0f3075A87b3640923D45A26cef3Ee'
-        beforeAll(registerEthrDid)
+
+        beforeAll(() => {
+          registerEthrDid()
+        })
 
         describe('with override set to true', () => {
           let session: EncryptedSession
@@ -264,6 +267,31 @@ describe('createIdentity()', () => {
           it('should generate an ephemeral public key', () => {
             return expect(session.toPublicKey).toBeDefined()
           })
+        })
+
+        describe('resolving error', () => {
+          const fail = 'did:fail:hello'
+
+          describe('with override set to true', () => {
+            let session: EncryptedSession
+            beforeAll(async () => {
+              session = await id.openSession(fail, true)
+            })
+            it('should generate an ephemeral public key', () => {
+              return expect(session.toPublicKey).toBeDefined()
+            })
+          })
+          describe('default behavior', () => {
+            it('should throw an exception', async () => {
+              try {
+                const session = await id.openSession(fail)
+                return expect(session).toBeUndefined()
+              } catch (error) {
+                return expect(error.message).toEqual('Recipient DID did:fail:hello does not have a valid encryption publicKey')
+              }
+            })
+          })
+
         })
 
         describe('with override set to a encPublicKey', () => {

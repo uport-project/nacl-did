@@ -305,10 +305,14 @@ function didToSignPubKey(did: string) {
 }
 
 async function resolveEncryptionPublicKey(did: string): Promise<Uint8Array | undefined> {
-  const doc = await resolve(did)
-  if (doc) {
-    const publicKey = doc.publicKey.find(pub => pub.type === 'Curve25519EncryptionPublicKey')
-    if (publicKey && publicKey.publicKeyBase64) return naclutil.decodeBase64(publicKey.publicKeyBase64)
+  try {
+    const doc = await resolve(did)
+    if (doc) {
+      const publicKey = doc.publicKey.find(pub => pub.type === 'Curve25519EncryptionPublicKey')
+      if (publicKey && publicKey.publicKeyBase64) return naclutil.decodeBase64(publicKey.publicKeyBase64)
+    }
+  } catch (error) {
+    // console.log(error.message)
   }
 }
 
