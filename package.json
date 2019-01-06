@@ -1,6 +1,6 @@
 {
   "name": "nacl-did",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Resolve and manage DIDs using NaCL crypto suites",
   "main": "lib/register.js",
   "types": "lib/register.d.ts",
