@@ -128,7 +128,7 @@ The built in JWT implementation only signs and verifies JWT's using the NaCL DID
 
 ## Encryption
 
-The NaCL DID method supports public key encryption using NaCL's `x25519-xsalsa20-poly1305` algorithm.
+The NaCL DID method supports public key encryption using NaCL's `x25519-xsalsa20-poly1305` (`box`) algorithm. If the `to` field is my own DID it uses  NaCL's symmetric encryption `xsalsa20-poly1305` (`secret-box`) algorithm instead.
 
 Use the `encrypt(to, data)` and `decrypt(encrypted)` methods.
 
@@ -155,6 +155,29 @@ const session = identity.openSession('did:nacl:PfFss0oSFiwSdJuZXO6EfGK2T37Bz5gPy
 const encrypted = await session.encrypt('hello')
 const clear = session.decrypt(encrypted)
 ```
+
+In cases that the counterparty identity (the recipient) does not have an encryption key in it's DID document you can pass in an optional encryption public key received through an external process, but it will also default to any public key in the DID document.
+
+```javascript
+import { createIdentity } from 'nacl-did'
+
+const identity = createIdentity()
+const session = identity.openSession('did:ethr:0x2Cc31912B2b0f3075A87b3640923D45A26cef3Ee', 'mJsioLTc7iyILsSUT8qmWyTnzytSKEmcg8bAeJ2R33U=')
+const encrypted = await session.encrypt('hello')
+const clear = session.decrypt(encrypted)
+```
+
+In other cases you want to always encrypt data to yourself, even if the counterparty doesn't have a public key. Just pass in a `true` to the `openSession`.
+
+```javascript
+import { createIdentity } from 'nacl-did'
+
+const identity = createIdentity()
+const session = identity.openSession('did:ethr:0x2Cc31912B2b0f3075A87b3640923D45A26cef3Ee', true)
+const encrypted = await session.encrypt('hello')
+const clear = session.decrypt(encrypted)
+```
+
 
 ## Resolving a DID document
 

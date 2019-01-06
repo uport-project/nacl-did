@@ -102,42 +102,76 @@ describe('createIdentity()', () => {
   })
 
   describe('encrypt()', async () => {
-    const alice = createIdentity()
-    const clearText = 'Super Secret'
-    let encrypted: Encrypted
-    beforeAll(async () => encrypted = await id.encrypt(alice.did, clearText))
+    describe('with counterparty', () => {
+      const alice = createIdentity()
+      const clearText = 'Super Secret'
+      let encrypted: Encrypted
+      beforeAll(async () => encrypted = await id.encrypt(alice.did, clearText))
 
-    it('should contain the to', () => {
-      expect(encrypted.to).toEqual(alice.did)
-    })
+      it('should contain the to', () => {
+        expect(encrypted.to).toEqual(alice.did)
+      })
 
-    it('should contain the from', () => {
-      expect(encrypted.from).toEqual(id.did)
-    })
+      it('should contain the from', () => {
+        expect(encrypted.from).toEqual(id.did)
+      })
 
-    it('should contain a nonce', () => {
-      expect(encrypted.nonce).toBeDefined()
-      expect(naclutil.decodeBase64(encrypted.nonce)).toBeDefined()
-    })
+      it('should contain a nonce', () => {
+        expect(encrypted.nonce).toBeDefined()
+        expect(naclutil.decodeBase64(encrypted.nonce)).toBeDefined()
+      })
 
-    it('should contain cipher text', () => {
-      expect(encrypted.ciphertext).toBeDefined()
-      expect(naclutil.decodeBase64(encrypted.ciphertext)).toBeDefined()
-    })
+      it('should contain cipher text', () => {
+        expect(encrypted.ciphertext).toBeDefined()
+        expect(naclutil.decodeBase64(encrypted.ciphertext)).toBeDefined()
+      })
 
-    it('should contain a version', () => {
-      expect(encrypted.version).toEqual('x25519-xsalsa20-poly1305')
-    })
+      it('should contain a version', () => {
+        expect(encrypted.version).toEqual('x25519-xsalsa20-poly1305')
+      })
 
-    describe('decrypt()', () => {
-      describe('creator', () => {
-        it('can decrypt', () => {
-          expect(naclutil.encodeUTF8(<Uint8Array>id.decrypt(encrypted))).toEqual(clearText)
+      describe('decrypt()', () => {
+        describe('creator', () => {
+          it('can decrypt', () => {
+            expect(id.decrypt(encrypted)).toEqual(clearText)
+          })
+        })
+        describe('recipient', () => {
+          it('can decrypt', () => {
+            expect(alice.decrypt(encrypted)).toEqual(clearText)
+          })
         })
       })
-      describe('recipient', () => {
-        it('can decrypt', () => {
-          expect(naclutil.encodeUTF8(<Uint8Array>alice.decrypt(encrypted))).toEqual(clearText)
+    })
+
+    describe('to myself', () => {
+      const clearText = 'Super Secret'
+      let encrypted: Encrypted
+      beforeAll(async () => encrypted = await id.encrypt(id.did, clearText))
+
+      it('should contain the to', () => {
+        expect(encrypted.to).toEqual(id.did)
+      })
+
+      it('should contain a nonce', () => {
+        expect(encrypted.nonce).toBeDefined()
+        expect(naclutil.decodeBase64(encrypted.nonce)).toBeDefined()
+      })
+
+      it('should contain cipher text', () => {
+        expect(encrypted.ciphertext).toBeDefined()
+        expect(naclutil.decodeBase64(encrypted.ciphertext)).toBeDefined()
+      })
+
+      it('should contain a version', () => {
+        expect(encrypted.version).toEqual('xsalsa20-poly1305')
+      })
+
+      describe('decrypt()', () => {
+        describe('creator', () => {
+          it('can decrypt', () => {
+            expect(id.decrypt(encrypted)).toEqual(clearText)
+          })
         })
       })
     })
@@ -153,12 +187,6 @@ describe('createIdentity()', () => {
       })
 
       describe('meta data', () => {
-        describe('from property', () => {
-          it('should be set to my DID', () => {
-            expect(session.from).toEqual(id.did)
-          })
-        })
-
         describe('to property', () => {
           it('should be set to recipients DID', () => {
             expect(session.to).toEqual(alice.did)
@@ -200,88 +228,96 @@ describe('createIdentity()', () => {
         describe('decrypt', () => {
           describe('using session', () => {
             it('should decrypt', () => {
-              expect(naclutil.encodeUTF8(<Uint8Array>session.decrypt(encrypted))).toEqual(clearText)
+              expect(session.decrypt(encrypted)).toEqual(clearText)
             })
           })
 
           describe('using sender identity', () => {
             it('should decrypt', () => {
-              expect(naclutil.encodeUTF8(<Uint8Array>id.decrypt(encrypted))).toEqual(clearText)
+              expect(id.decrypt(encrypted)).toEqual(clearText)
             })
           })
 
           describe('using recipient identity', () => {
             it('should decrypt', () => {
-              expect(naclutil.encodeUTF8(<Uint8Array>alice.decrypt(encrypted))).toEqual(clearText)
+              expect(alice.decrypt(encrypted)).toEqual(clearText)
             })
           })
         })
       })
 
-      describe('isOpen()', () => {
-        it('should be open', () => {
-          expect(session.isOpen()).toBeTruthy()
+      describe('Recipient is myself', () => {
+        let session: EncryptedSession
+        beforeAll(async () => {
+          session = await id.openSession(id.did)
         })
-      })
 
-      describe('close()', () => {
-        beforeAll(() => session.close())
-
-        it('should not be open', () => {
-          expect(session.isOpen()).toBeFalsy()
+        it('should set to', () => {
+          expect(session.to).toEqual(id.did)
         })
 
         describe('encrypt', () => {
-          it('should throw an error', async () => {
-            try {
-              const encrypted = await session.encrypt('hello')
-              return expect(encrypted).toBeUndefined()
-            } catch (error) {
-              return expect(error.message).toEqual(`Session with ${alice.did} has been closed`)
-            }
+          const clearText = 'Secret Stuff'
+          let encrypted: Encrypted
+          beforeAll(async () => {
+            encrypted = await session.encrypt(clearText)
           })
-        })
 
-        describe('decrypt', () => {
-          it('should thrown an error', async () => {
-            const encrypted = await id.encrypt(alice.did, 'hello')
-            expect(() => session.decrypt(encrypted)).toThrowError(`Session with ${alice.did} has been closed`)
+          describe('meta data', () => {
+            describe('from property', () => {
+              it('should be undefined', () => {
+                expect(encrypted.from).toBeUndefined()
+              })
+            })
+
+            describe('to property', () => {
+              it('should be set to my DID', () => {
+                expect(encrypted.to).toEqual(id.did)
+              })
+            })
+
+            it('should contain a version', () => {
+              expect(encrypted.version).toEqual('xsalsa20-poly1305')
+            })
+          })
+
+          describe('decrypt', () => {
+            describe('using session', () => {
+              it('should decrypt', () => {
+                expect(session.decrypt(encrypted)).toEqual(clearText)
+              })
+            })
+
+            describe('using sender identity', () => {
+              it('should decrypt', () => {
+                expect(id.decrypt(encrypted)).toEqual(clearText)
+              })
+            })
           })
         })
       })
-    })
 
+    })
     describe('non nacl did', () => {
       describe('recipient does not have EncPublicKey', () => {
         const ethr = 'did:ethr:0x2Cc31912B2b0f3075A87b3640923D45A26cef3Ee'
+        const fail = 'did:fail:hello'
 
         beforeAll(() => {
           registerEthrDid()
         })
 
-        describe('with override set to true', () => {
-          let session: EncryptedSession
-          beforeAll(async () => {
-            session = await id.openSession(ethr, true)
+        describe('default behavior', () => {
+          it('should throw an exception', async () => {
+            try {
+              const session = await id.openSession(ethr)
+              return expect(session).toBeUndefined()
+            } catch (error) {
+              return expect(error.message).toEqual('Recipient DID did:ethr:0x2Cc31912B2b0f3075A87b3640923D45A26cef3Ee does not have a valid encryption publicKey')
+            }
           })
-          it('should generate an ephemeral public key', () => {
-            return expect(session.toPublicKey).toBeDefined()
-          })
-        })
 
-        describe('resolving error', () => {
-          const fail = 'did:fail:hello'
-
-          describe('with override set to true', () => {
-            let session: EncryptedSession
-            beforeAll(async () => {
-              session = await id.openSession(fail, true)
-            })
-            it('should generate an ephemeral public key', () => {
-              return expect(session.toPublicKey).toBeDefined()
-            })
-          })
-          describe('default behavior', () => {
+          describe('resolution failure', () => {
             it('should throw an exception', async () => {
               try {
                 const session = await id.openSession(fail)
@@ -291,7 +327,69 @@ describe('createIdentity()', () => {
               }
             })
           })
+        })
+        describe('with override set to true', () => {
+          describe('Setup Symetric session with myself', () => {
+            let session: EncryptedSession
+            beforeAll(async () => {
+              session = await id.openSession(ethr, true)
+            })
 
+            it('should set to', () => {
+              expect(session.to).toEqual(id.did)
+            })
+
+            describe('encrypt', () => {
+              const clearText = 'Secret Stuff'
+              let encrypted: Encrypted
+              beforeAll(async () => {
+                encrypted = await session.encrypt(clearText)
+              })
+
+              describe('meta data', () => {
+                describe('from property', () => {
+                  it('should be undefined', () => {
+                    expect(encrypted.from).toBeUndefined()
+                  })
+                })
+
+                describe('to property', () => {
+                  it('should be set to my DID', () => {
+                    expect(encrypted.to).toEqual(id.did)
+                  })
+                })
+
+                it('should contain a version', () => {
+                  expect(encrypted.version).toEqual('xsalsa20-poly1305')
+                })
+              })
+
+              describe('decrypt', () => {
+                describe('using session', () => {
+                  it('should decrypt', () => {
+                    expect(session.decrypt(encrypted)).toEqual(clearText)
+                  })
+                })
+
+                describe('using sender identity', () => {
+                  it('should decrypt', () => {
+                    expect(id.decrypt(encrypted)).toEqual(clearText)
+                  })
+                })
+              })
+            })
+          })
+
+          describe('resolving error', () => {
+            let session: EncryptedSession
+            beforeAll(async () => {
+              session = await id.openSession(fail, true)
+            })
+
+            it('should set to', () => {
+              expect(session.to).toEqual(id.did)
+            })
+          })
         })
 
         describe('with override set to a encPublicKey', () => {
@@ -300,10 +398,6 @@ describe('createIdentity()', () => {
           let session: EncryptedSession
           beforeAll(async () => {
             session = await id.openSession(ethr, encPublicKey)
-          })
-
-          it('should use passed in encryption key', () => {
-            return expect(session.toPublicKey).toEqual(encPublicKey)
           })
 
           describe('encryption', () => {
@@ -323,18 +417,6 @@ describe('createIdentity()', () => {
             it('should set encPubKey', () => {
               expect(encrypted.toPublicKey).toEqual(encPublicKey)
             })
-          })
-
-        })
-
-        describe('default behavior', () => {
-          it('should throw an exception', async () => {
-            try {
-              const session = await id.openSession(ethr)
-              return expect(session).toBeUndefined()
-            } catch (error) {
-              return expect(error.message).toEqual('Recipient DID did:ethr:0x2Cc31912B2b0f3075A87b3640923D45A26cef3Ee does not have a valid encryption publicKey')
-            }
           })
         })
       })
