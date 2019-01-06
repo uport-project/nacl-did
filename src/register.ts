@@ -183,6 +183,7 @@ export class NaCLIdentity {
    * 
    */
   async openSession(to: string, overridePublicKey: boolean | string = false): Promise<EncryptedSession> {
+    if (to === this.did) return new SymEncryptedSession(this)
     let publicKey = await resolveEncryptionPublicKey(to)
     if (!publicKey) {
       if (typeof overridePublicKey === 'string') {

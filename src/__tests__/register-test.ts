@@ -246,6 +246,57 @@ describe('createIdentity()', () => {
         })
       })
 
+      describe('Recipient is myself', () => {
+        let session: EncryptedSession
+        beforeAll(async () => {
+          session = await id.openSession(id.did)
+        })
+
+        it('should set to', () => {
+          expect(session.to).toEqual(id.did)
+        })
+
+        describe('encrypt', () => {
+          const clearText = 'Secret Stuff'
+          let encrypted: Encrypted
+          beforeAll(async () => {
+            encrypted = await session.encrypt(clearText)
+          })
+
+          describe('meta data', () => {
+            describe('from property', () => {
+              it('should be undefined', () => {
+                expect(encrypted.from).toBeUndefined()
+              })
+            })
+
+            describe('to property', () => {
+              it('should be set to my DID', () => {
+                expect(encrypted.to).toEqual(id.did)
+              })
+            })
+
+            it('should contain a version', () => {
+              expect(encrypted.version).toEqual('xsalsa20-poly1305')
+            })
+          })
+
+          describe('decrypt', () => {
+            describe('using session', () => {
+              it('should decrypt', () => {
+                expect(session.decrypt(encrypted)).toEqual(clearText)
+              })
+            })
+
+            describe('using sender identity', () => {
+              it('should decrypt', () => {
+                expect(id.decrypt(encrypted)).toEqual(clearText)
+              })
+            })
+          })
+        })
+      })
+
     })
     describe('non nacl did', () => {
       describe('recipient does not have EncPublicKey', () => {
