@@ -3,13 +3,14 @@ import nacl from 'tweetnacl'
 import naclutil from 'tweetnacl-util'
 import { convertKeyPair, convertPublicKey } from 'ed2curve'
 
-export const CIPHER_VERSION = 'x25519-xsalsa20-poly1305'
+export const ASYM_CIPHER_VERSION = 'x25519-xsalsa20-poly1305'
+export const SYM_CIPHER_VERSION = 'xsalsa20-poly1305'
 
 interface EncryptedTemplate {
   to: string
-  from: string
+  from?: string
   version: string
-  toPublicKey: string
+  toPublicKey?: string
 }
 
 export interface Encrypted extends EncryptedTemplate {
@@ -171,71 +172,101 @@ export class NaCLIdentity {
   /**
    * Opens an efficient session for encrypting and decrypting messages between this and another DID.
    * 
+   * An optional publicKey that has been exchanged out of band can be passed into the second parameter. This
+   * will ONLY be used if no encryption public key was found in DID document.
+   * 
+   * If you would like to encrypt things to your self regardless if a public key was not found, pass in the value of `true` as the second argument.
+   * It will then be encrypted symetrically instead.
+   * 
    * @param to DID of recipient
-   * @param overridePublicKey If DID method does not contain an encryption public key use this key or `true` to create a new ephemeral key
+   * @param overridePublicKey If DID method does not contain an encryption public key use this key
+   * 
    */
   async openSession(to: string, overridePublicKey: boolean | string = false): Promise<EncryptedSession> {
-    // If recipient doesn't have a valid publicKey create an ephemeral one
-    // This means that I at least have the session encrypted to myself
     let publicKey = await resolveEncryptionPublicKey(to)
     if (!publicKey) {
-      if (overridePublicKey) {
-        if (typeof overridePublicKey === 'string') {
-          publicKey = naclutil.decodeBase64(<string>overridePublicKey)
-        } else {
-          publicKey = nacl.randomBytes(32)
-        }
-      } else throw new Error(`Recipient DID ${to} does not have a valid encryption publicKey`)
+      if (typeof overridePublicKey === 'string') {
+        publicKey = naclutil.decodeBase64(overridePublicKey)
+      } else {
+        if (overridePublicKey === true) {
+          return new SymEncryptedSession(this)
+        } else throw new Error(`Recipient DID ${to} does not have a valid encryption publicKey`)
+      }
     }
-    return new EncryptedSession(this.did, to, naclutil.encodeBase64(publicKey), nacl.box.before(publicKey, this.encPrivateKey))
+    return new AsymEncryptedSession(this.did, to, naclutil.encodeBase64(publicKey), nacl.box.before(publicKey, this.encPrivateKey))
   }
 
   /**
    * Encrypt a single message to send to a recipient
-   * @param to DID of recipient
+   * @param to DID of recipient (uses symetric encryption if to is my own DID)
    * @param data Data to encrypt
    */
   async encrypt(to: string, data: string | Uint8Array): Promise<Encrypted> {
-    const toPubKey = didToEncPubKey(to)
-    const nonce = await randomBytes(nacl.box.nonceLength)
-    const ciphertext = nacl.box(normalizeClearData(data), nonce, toPubKey, this.encPrivateKey)
-    return {
-      to: to,
-      from: this.did,
-      toPublicKey: naclutil.encodeBase64(toPubKey),
-      nonce: naclutil.encodeBase64(nonce),
-      ciphertext: naclutil.encodeBase64(ciphertext),
-      version: CIPHER_VERSION
+    if (to === this.did) {
+      const nonce = await randomBytes(nacl.secretbox.nonceLength)
+      const ciphertext = nacl.secretbox(normalizeClearData(data), nonce, this.encPrivateKey)
+      return {
+        to: to,
+        nonce: naclutil.encodeBase64(nonce),
+        ciphertext: naclutil.encodeBase64(ciphertext),
+        version: SYM_CIPHER_VERSION
+      }
+    } else {
+      const toPubKey = didToEncPubKey(to)
+      const nonce = await randomBytes(nacl.box.nonceLength)
+      const ciphertext = nacl.box(normalizeClearData(data), nonce, toPubKey, this.encPrivateKey)
+      return {
+        to: to,
+        from: this.did,
+        toPublicKey: naclutil.encodeBase64(toPubKey),
+        nonce: naclutil.encodeBase64(nonce),
+        ciphertext: naclutil.encodeBase64(ciphertext),
+        version: ASYM_CIPHER_VERSION
+      }
     }
   }
 
   // Decrypt a single message
-  decrypt({ from, to, nonce, ciphertext, version }: Encrypted) {
-    if (version !== CIPHER_VERSION) throw new Error(`We do not support ${version}`)
-    if (from !== this.did && to !== this.did) throw new Error(`This was not encrypted to ${this.did}`)
-    const other = from === this.did ? to : from
-    if (!other) throw new Error('No counter party included')
-    return nacl.box.open(naclutil.decodeBase64(ciphertext), naclutil.decodeBase64(nonce), didToEncPubKey(other), this.encPrivateKey)
+  decrypt({ from, to, nonce, ciphertext, version }: Encrypted): string {
+    switch (version) {
+      case ASYM_CIPHER_VERSION:
+        if (from !== this.did && to !== this.did) throw new Error(`This was not encrypted to ${this.did}`)
+        const other = from === this.did ? to : from
+        if (!other) throw new Error('No counter party included')
+        return naclutil.encodeUTF8(<Uint8Array>nacl.box.open(naclutil.decodeBase64(ciphertext), naclutil.decodeBase64(nonce), didToEncPubKey(other), this.encPrivateKey))
+      case SYM_CIPHER_VERSION:
+        if (to !== this.did) throw new Error(`This was not encrypted to ${this.did}`)
+        return naclutil.encodeUTF8(<Uint8Array>nacl.secretbox.open(naclutil.decodeBase64(ciphertext), naclutil.decodeBase64(nonce), this.encPrivateKey))
+      default:
+        throw new Error(`We do not support ${version}`)
+    }
   }
 }
 
-export class EncryptedSession {
-  public readonly from: string
+export abstract class EncryptedSession {
   public readonly to: string
+  constructor(to: string) {
+    this.to = to
+  }
+  abstract async encrypt(data: string | Uint8Array): Promise<Encrypted>
+  abstract decrypt(encrypted: Encrypted): string
+}
+class AsymEncryptedSession extends EncryptedSession {
+  public readonly from: string
   public readonly toPublicKey: string
   private readonly template: EncryptedTemplate
   private sharedKey: Uint8Array
 
   constructor(from: string, to: string, toPublicKey: string, sharedKey: Uint8Array) {
+    super(to)
     this.from = from
-    this.to = to
     this.sharedKey = sharedKey
     this.toPublicKey = toPublicKey
     this.template = {
       toPublicKey,
       from,
       to,
-      version: CIPHER_VERSION
+      version: ASYM_CIPHER_VERSION
     }
   }
 
@@ -244,7 +275,6 @@ export class EncryptedSession {
    * @param data 
    */
   async encrypt(data: string | Uint8Array): Promise<Encrypted> {
-    if (!this.isOpen()) throw new Error(`Session with ${this.to} has been closed`)
     const nonce = await randomBytes(nacl.box.nonceLength)
     const ciphertext = nacl.box.after(normalizeClearData(data), nonce, this.sharedKey)
     return {
@@ -255,22 +285,35 @@ export class EncryptedSession {
   }
 
   /**
+   * Decrypt data from counter party or myself
+   */
+  decrypt({ from, to, nonce, ciphertext, version }: Encrypted): string {
+    if (version !== ASYM_CIPHER_VERSION) throw new Error(`We do not support ${version}`)
+    if (from !== this.from && to !== this.to) throw new Error(`This was not encrypted to us`)
+    return naclutil.encodeUTF8(<Uint8Array>nacl.box.open.after(naclutil.decodeBase64(ciphertext), naclutil.decodeBase64(nonce), this.sharedKey))
+  }
+}
+
+class SymEncryptedSession extends EncryptedSession {
+  private readonly id: NaCLIdentity
+  constructor(id: NaCLIdentity) {
+    super(id.did)
+    this.id = id
+  }
+
+  /**
+   * Encrypt data to recipient
+   * @param data 
+   */
+  async encrypt(data: string | Uint8Array): Promise<Encrypted> {
+    return this.id.encrypt(this.to, data)
+  }
+
+  /**
    * Decrypt data from counter party
    */
-  decrypt({ from, to, nonce, ciphertext, version }: Encrypted) {
-    if (!this.isOpen()) throw new Error(`Session with ${this.to} has been closed`)
-    if (version !== CIPHER_VERSION) throw new Error(`We do not support ${version}`)
-    if (from !== this.from && to !== this.to) throw new Error(`This was not encrypted to us`)
-    return nacl.box.open.after(naclutil.decodeBase64(ciphertext), naclutil.decodeBase64(nonce), this.sharedKey)
-  }
-
-  isOpen() {
-    return this.sharedKey.length > 0
-  }
-
-  close() {
-    this.sharedKey.fill(0)
-    this.sharedKey = new Uint8Array(0)
+  decrypt(encrypted: Encrypted): string {
+    return this.id.decrypt(encrypted)
   }
 }
 
