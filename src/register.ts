@@ -112,10 +112,10 @@ const ENCODED_JOSE_HEADER = encodeBase64Url(naclutil.decodeUTF8(JSON.stringify(J
  */
 export class NaCLIdentity {
   readonly did: string
-  private readonly privateKey: Uint8Array
-  private readonly encPrivateKey: Uint8Array
   readonly publicKey: Uint8Array
   readonly encPublicKey: Uint8Array
+  private readonly privateKey: Uint8Array
+  private readonly encPrivateKey: Uint8Array
 
   /**
    * Create a new NaCL Identity for a KeyPair
@@ -217,7 +217,7 @@ export class NaCLIdentity {
       const nonce = await randomBytes(nacl.box.nonceLength)
       const ciphertext = nacl.box(normalizeClearData(data), nonce, toPubKey, this.encPrivateKey)
       return {
-        to: to,
+        to,
         from: this.did,
         toPublicKey: naclutil.encodeBase64(toPubKey),
         nonce: naclutil.encodeBase64(nonce),
@@ -245,7 +245,7 @@ export class NaCLIdentity {
 }
 
 export abstract class EncryptedSession {
-  public readonly to: string
+  readonly to: string
   constructor(to: string) {
     this.to = to
   }
@@ -253,8 +253,8 @@ export abstract class EncryptedSession {
   abstract decrypt(encrypted: Encrypted): string
 }
 class AsymEncryptedSession extends EncryptedSession {
-  public readonly from: string
-  public readonly toPublicKey: string
+  readonly from: string
+  readonly toPublicKey: string
   private readonly template: EncryptedTemplate
   private sharedKey: Uint8Array
 
@@ -281,7 +281,7 @@ class AsymEncryptedSession extends EncryptedSession {
     return {
       ...this.template,
       nonce: naclutil.encodeBase64(nonce),
-      ciphertext: naclutil.encodeBase64(ciphertext),
+      ciphertext: naclutil.encodeBase64(ciphertext)
     }
   }
 
@@ -386,7 +386,7 @@ export function loadIdentity(sId: SerializableNaCLIdentity): NaCLIdentity {
  * Registers `nacl` DID resolver
  */
 export default function register() {
-  async function resolve(
+  async function naclDIDResolve(
     did: string,
     parsed: ParsedDID,
   ): Promise<DIDDocument | null> {
@@ -411,5 +411,5 @@ export default function register() {
       }]
     }
   }
-  registerMethod('nacl', resolve)
+  registerMethod('nacl', naclDIDResolve)
 }

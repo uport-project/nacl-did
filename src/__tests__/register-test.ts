@@ -247,7 +247,6 @@ describe('createIdentity()', () => {
       })
 
       describe('Recipient is myself', () => {
-        let session: EncryptedSession
         beforeAll(async () => {
           session = await id.openSession(id.did)
         })
