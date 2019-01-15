@@ -22,7 +22,7 @@
     "build": "npm run build:es5 && npm run test && npm run build:browser",
     "test": "./node_modules/.bin/jest --coverage",
     "test:watch": "./node_modules/.bin/jest --watch",
-    "test:ci": "./node_modules/.bin/jest -u --coverage && cat ./coverage/lcov.info | ./node_modules/.bin/codacy-coverage",
+    "test:ci": "./node_modules/.bin/jest -u --coverage && cat ./coverage/lcov.info | ./node_modules/.bin/codacy-coverage -v",
     "dev": "tsc --watch",
     "format": "prettier",
     "build:docs": "./node_modules/.bin/typedoc --theme markdown --out docs/ src/register.ts ./index.d.ts",
