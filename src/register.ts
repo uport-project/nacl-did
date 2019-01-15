@@ -23,12 +23,12 @@ interface NaCLKeyPair {
   secretKey: Uint8Array
 }
 
-interface SerializableNaCLIdentity {
+export interface SerializableNaCLIdentity {
   did: string
   privateKey: string
 }
 
-interface SignedData {
+export interface SignedData {
   signer: string
   data: string | Uint8Array
   signature: Uint8Array
@@ -39,7 +39,7 @@ interface JOSEHeader {
   alg: string
 }
 
-interface VerifiedJWT {
+export interface VerifiedJWT {
   issuer: string,
   payload: any
 }
