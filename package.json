@@ -11,7 +11,6 @@
     "url": "https://github.com/uport-project/nacl-did.git"
   },
   "dependencies": {
-    "codacy-coverage": "^3.4.0",
     "did-resolver": "0.0.6-alpha5",
     "ed2curve": "git+https://github.com/uport-project/ed2curve-js.git",
     "tweetnacl": "^1.0.0",
@@ -23,8 +22,7 @@
     "build": "npm run build:es5 && npm run test && npm run build:browser",
     "test": "./node_modules/.bin/jest --coverage",
     "test:watch": "./node_modules/.bin/jest --watch",
-    "test:ci": "./node_modules/.bin/jest -u --coverage",
-    "test-with-coverage": "./node_modules/.bin/jest --coverage && cat ./coverage/lcov.info | ./node_modules/.bin/codacy-coverage",
+    "test:ci": "./node_modules/.bin/jest -u --coverage && cat ./coverage/lcov.info | ./node_modules/.bin/codacy-coverage",
     "dev": "tsc --watch",
     "format": "prettier",
     "build:docs": "./node_modules/.bin/typedoc --theme markdown --out docs/ src/register.ts ./index.d.ts",
@@ -33,6 +31,7 @@
   "devDependencies": {
     "@types/jest": "^23.3.10",
     "@types/mockdate": "^2.0.0",
+    "codacy-coverage": "^3.4.0",
     "ethr-did-resolver": "^0.2.0-alpha1",
     "jest": "^23.6.0",
     "mockdate": "^2.0.2",
