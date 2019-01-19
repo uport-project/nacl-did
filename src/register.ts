@@ -336,6 +336,13 @@ export function verifyJWT(jwt: string): VerifiedJWT {
   if (parts[0] !== ENCODED_JOSE_HEADER) throw new Error('Incorrect JWT Type')
   const payload = JSON.parse(naclutil.encodeUTF8(decodeBase64Url(parts[1])))
   if (!payload.iss) throw new Error('JWT did not contain an `iss`')
+  if (payload.exp !== undefined) {
+    if (typeof payload.exp !== 'number') throw new Error(`Invalid exp in JWT ${payload.exp} = ${typeof payload.exp}`)
+    const exp = payload.exp * 1000
+    if (exp < new Date().getTime()) {
+      throw new Error(`JWT expired on: ${payload.exp}`)
+    }
+  }
   if (verifySignature({ signer: payload.iss, data: `${parts[0]}.${parts[1]}`, signature: decodeBase64Url(parts[2]) })) {
     return { issuer: payload.iss, payload }
   } else {
