@@ -116,7 +116,7 @@ describe('createIdentity()', () => {
       }).map(devoid)
 
       const expiredPayloads: Fuzzer<StandardJWT> = object<StandardJWT>({
-        exp: posInteger({ maxSize: NOW - 1 }),
+        exp: posInteger({ maxSize: NOW - 1 })
       })
 
       check('generates valid JWT', [validPayloads], payload => {
