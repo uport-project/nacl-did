@@ -1,3 +1,4 @@
+import { check, Fuzzer, string, posInteger, object, integer, asciiString, oneOf } from 'kitimat-jest'
 import register, { createIdentity, loadIdentity, verifySignature, verifyJWT, encodeBase64Url, decodeBase64Url, didToEncPubKey, EncryptedSession, Encrypted } from '../register'
 import registerEthrDid from 'ethr-did-resolver'
 import resolve from 'did-resolver'
@@ -9,6 +10,9 @@ import MockDate from 'mockdate'
 const NOW = 1485321133
 MockDate.set(NOW * 1000)
 register()
+
+const clearTexts: Fuzzer<string> = string()
+const byteArrays: Fuzzer<Uint8Array> = posInteger({ maxSize: 10000 }).map(i => nacl.randomBytes(i))
 
 describe('nacl did resolver', () => {
   const did: string = 'did:nacl:Md8JiMIwsapml_FtQ2ngnGftNP5UmVCAUuhnLyAsPxI'
@@ -56,47 +60,77 @@ describe('createIdentity()', () => {
   })
 
   describe('sign()', () => {
-    ['hello', naclutil.decodeUTF8('This is a Uint8Array')].forEach(clear => {
-      describe('signed', () => {
-        const signed = id.sign(clear)
-        it('should contain data', () => {
-          expect(signed.data).toEqual(clear)
-        })
+    const malory = createIdentity()
+    const other = id.sign('something completely different')
+    check('strings', [clearTexts], clear => {
+      const signed = id.sign(clear)
+      expect(signed.data).toEqual(clear)
+      expect(id.verify(signed)).toBeTruthy()
+      expect(id.verify({ ...signed, signature: other.signature })).toBeFalsy()
+      expect(verifySignature(signed)).toBeTruthy()
+      expect(verifySignature({ ...signed, signer: malory.did })).toBeFalsy()
+    })
 
-        describe('verify()', () => {
-          it('should be able to verify signature', () => {
-            expect(id.verify(signed)).toBeTruthy()
-          })
-
-          it('should fail incorrect signature', () => {
-            const other = id.sign('something completely different')
-            expect(id.verify({ ...signed, signature: other.signature })).toBeFalsy()
-          })
-        })
-
-        describe('verifySignature()', () => {
-          it('should verify that it came from given did', () => {
-            expect(verifySignature(signed)).toBeTruthy()
-          })
-
-          it('should fail that it came from other did', () => {
-            const malory = createIdentity()
-            expect(verifySignature({ ...signed, signer: malory.did })).toBeFalsy()
-          })
-        })
-      })
+    check('bytearrays', [byteArrays], clear => {
+      const signed = id.sign(clear)
+      expect(signed.data).toEqual(clear)
+      expect(id.verify(signed)).toBeTruthy()
+      expect(id.verify({ ...signed, signature: other.signature })).toBeFalsy()
+      expect(verifySignature(signed)).toBeTruthy()
+      expect(verifySignature({ ...signed, signer: malory.did })).toBeFalsy()
     })
   })
 
   describe('JWT', () => {
     describe('createJWT', () => {
-      it('generates JWT', () => {
-        const payload = { sub: id.did, claims: { name: 'Bill' } }
+      interface NameClaim {
+        name: string
+      }
+      interface StandardJWT {
+        iss?: string | void
+        sub?: string | void
+        aud?: string | void
+        exp?: number | void
+        iat?: number | void
+        claims?: NameClaim | void
+      }
+      function devoid(fake: StandardJWT) {
+        const payload: StandardJWT = {}
+        if (fake.iss) payload.iss = fake.iss
+        if (fake.sub) payload.sub = fake.sub
+        if (fake.aud) payload.aud = fake.aud
+        if (fake.exp) payload.exp = fake.exp
+        if (fake.iat) payload.iat = fake.iat
+        if (fake.claims) payload.claims = fake.claims
+        return payload
+      }
+      const validPayloads: Fuzzer<StandardJWT> = object<StandardJWT>({
+        iss: string().maybe(),
+        sub: string().maybe(),
+        aud: string().maybe(),
+        iat: posInteger().maybe(),
+        exp: posInteger().map(exp => exp + NOW + 1).maybe(),
+        claims: object<NameClaim>({
+          name: asciiString()
+        }).maybe()
+      }).map(devoid)
+
+      const expiredPayloads: Fuzzer<StandardJWT> = object<StandardJWT>({
+        exp: posInteger({ maxSize: NOW - 1 })
+      })
+
+      check('generates valid JWT', [validPayloads], payload => {
         const jwt = id.createJWT(payload)
         expect(jwt).toBeDefined()
         const verified = verifyJWT(jwt)
         expect(verified.issuer).toEqual(id.did)
         expect(verified.payload).toEqual({ ...payload, iss: id.did, iat: NOW })
+      })
+
+      check('handles expiration', [expiredPayloads], payload => {
+        const jwt = id.createJWT(payload)
+        expect(jwt).toBeDefined()
+        expect(() => verifyJWT(jwt)).toThrowError(`JWT expired on: ${payload.exp}`)
       })
     })
   })
@@ -181,6 +215,7 @@ describe('createIdentity()', () => {
     describe('recipient has encryption PublicKey', () => {
       const alice = createIdentity()
       let session: EncryptedSession
+      const alicePublicKey = naclutil.encodeBase64(alice.encPublicKey)
 
       beforeAll(async () => {
         session = await id.openSession(alice.did)
@@ -195,54 +230,15 @@ describe('createIdentity()', () => {
       })
 
       describe('encrypt', () => {
-        const clearText = 'Secret Stuff'
-        let encrypted: Encrypted
-        beforeAll(async () => {
-          encrypted = await session.encrypt(clearText)
-        })
-
-        describe('meta data', () => {
-          describe('from property', () => {
-            it('should be set to my DID', () => {
-              expect(encrypted.from).toEqual(id.did)
-            })
-          })
-
-          describe('to property', () => {
-            it('should be set to recipients DID', () => {
-              expect(encrypted.to).toEqual(alice.did)
-            })
-          })
-
-          describe('toPublicKey', () => {
-            it('should set toPublicKey', () => {
-              expect(encrypted.toPublicKey).toEqual(naclutil.encodeBase64(didToEncPubKey(alice.did)))
-            })
-          })
-
-          it('should contain a version', () => {
-            expect(encrypted.version).toEqual('x25519-xsalsa20-poly1305')
-          })
-        })
-
-        describe('decrypt', () => {
-          describe('using session', () => {
-            it('should decrypt', () => {
-              expect(session.decrypt(encrypted)).toEqual(clearText)
-            })
-          })
-
-          describe('using sender identity', () => {
-            it('should decrypt', () => {
-              expect(id.decrypt(encrypted)).toEqual(clearText)
-            })
-          })
-
-          describe('using recipient identity', () => {
-            it('should decrypt', () => {
-              expect(alice.decrypt(encrypted)).toEqual(clearText)
-            })
-          })
+        check('encrypts any string correctly', [clearTexts], async clearText => {
+          const encrypted = await session.encrypt(clearText)
+          expect(encrypted.from).toEqual(id.did)
+          expect(encrypted.to).toEqual(alice.did)
+          expect(encrypted.toPublicKey).toEqual(alicePublicKey)
+          expect(encrypted.version).toEqual('x25519-xsalsa20-poly1305')
+          expect(session.decrypt(encrypted)).toEqual(clearText)
+          expect(id.decrypt(encrypted)).toEqual(clearText)
+          expect(alice.decrypt(encrypted)).toEqual(clearText)
         })
       })
 
@@ -256,42 +252,14 @@ describe('createIdentity()', () => {
         })
 
         describe('encrypt', () => {
-          const clearText = 'Secret Stuff'
-          let encrypted: Encrypted
-          beforeAll(async () => {
-            encrypted = await session.encrypt(clearText)
-          })
-
-          describe('meta data', () => {
-            describe('from property', () => {
-              it('should be undefined', () => {
-                expect(encrypted.from).toBeUndefined()
-              })
-            })
-
-            describe('to property', () => {
-              it('should be set to my DID', () => {
-                expect(encrypted.to).toEqual(id.did)
-              })
-            })
-
-            it('should contain a version', () => {
-              expect(encrypted.version).toEqual('xsalsa20-poly1305')
-            })
-          })
-
-          describe('decrypt', () => {
-            describe('using session', () => {
-              it('should decrypt', () => {
-                expect(session.decrypt(encrypted)).toEqual(clearText)
-              })
-            })
-
-            describe('using sender identity', () => {
-              it('should decrypt', () => {
-                expect(id.decrypt(encrypted)).toEqual(clearText)
-              })
-            })
+          check('encrypts any string correctly', [clearTexts], async clearText => {
+            const encrypted = await session.encrypt(clearText)
+            expect(encrypted.from).toBeUndefined()
+            expect(encrypted.toPublicKey).toBeUndefined()
+            expect(encrypted.to).toEqual(id.did)
+            expect(encrypted.version).toEqual('xsalsa20-poly1305')
+            expect(session.decrypt(encrypted)).toEqual(clearText)
+            expect(id.decrypt(encrypted)).toEqual(clearText)
           })
         })
       })
@@ -339,42 +307,14 @@ describe('createIdentity()', () => {
             })
 
             describe('encrypt', () => {
-              const clearText = 'Secret Stuff'
-              let encrypted: Encrypted
-              beforeAll(async () => {
-                encrypted = await session.encrypt(clearText)
-              })
-
-              describe('meta data', () => {
-                describe('from property', () => {
-                  it('should be undefined', () => {
-                    expect(encrypted.from).toBeUndefined()
-                  })
-                })
-
-                describe('to property', () => {
-                  it('should be set to my DID', () => {
-                    expect(encrypted.to).toEqual(id.did)
-                  })
-                })
-
-                it('should contain a version', () => {
-                  expect(encrypted.version).toEqual('xsalsa20-poly1305')
-                })
-              })
-
-              describe('decrypt', () => {
-                describe('using session', () => {
-                  it('should decrypt', () => {
-                    expect(session.decrypt(encrypted)).toEqual(clearText)
-                  })
-                })
-
-                describe('using sender identity', () => {
-                  it('should decrypt', () => {
-                    expect(id.decrypt(encrypted)).toEqual(clearText)
-                  })
-                })
+              check('encrypts any string correctly', [clearTexts], async clearText => {
+                const encrypted = await session.encrypt(clearText)
+                expect(encrypted.from).toBeUndefined()
+                expect(encrypted.toPublicKey).toBeUndefined()
+                expect(encrypted.to).toEqual(id.did)
+                expect(encrypted.version).toEqual('xsalsa20-poly1305')
+                expect(session.decrypt(encrypted)).toEqual(clearText)
+                expect(id.decrypt(encrypted)).toEqual(clearText)
               })
             })
           })
@@ -400,20 +340,13 @@ describe('createIdentity()', () => {
           })
 
           describe('encryption', () => {
-            const clearText = 'Secret Stuff'
-            let encrypted: Encrypted
-
-            beforeAll(async () => encrypted = await session.encrypt(clearText))
-
-            it('should encrypt correctly', async () => {
+            check('encrypts any string correctly', [clearTexts], async clearText => {
+              const encrypted = await session.encrypt(clearText)
               expect(naclutil.encodeUTF8(<Uint8Array>nacl.box.open(
                 naclutil.decodeBase64(encrypted.ciphertext),
                 naclutil.decodeBase64(encrypted.nonce),
                 id.encPublicKey,
                 encKP.secretKey))).toEqual(clearText)
-            })
-
-            it('should set encPubKey', () => {
               expect(encrypted.toPublicKey).toEqual(encPublicKey)
             })
           })
@@ -437,12 +370,9 @@ describe('base64url', () => {
   })
 
   describe('random test', () => {
-    for (let i = 0; i < 100; i++) {
-      it(`should encode and decode correctly at size ${i}`, () => {
-        const data = nacl.randomBytes(i)
-        const encoded = encodeBase64Url(data)
-        expect(decodeBase64Url(encoded)).toEqual(data)
-      })
-    }
+    check(`should encode and decode correctly at different sizes`, [byteArrays], data => {
+      const encoded = encodeBase64Url(data)
+      expect(decodeBase64Url(encoded)).toEqual(data)
+    })
   })
 })
