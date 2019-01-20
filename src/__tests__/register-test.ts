@@ -1,5 +1,5 @@
-import { check, Fuzzer, string, posInteger, object, integer, asciiString, oneOf } from 'kitimat-jest'
-import { registerNaclDID, createIdentity, loadIdentity, verifySignature, verifyJWT, encodeBase64Url, decodeBase64Url, didToEncPubKey, EncryptedSession, Encrypted } from '../register'
+import { check, Fuzzer, string, posInteger, object, asciiString } from 'kitimat-jest'
+import { registerNaclDID, createIdentity, loadIdentity, verifySignature, verifyJWT, encodeBase64Url, decodeBase64Url, EncryptedSession, Encrypted } from '../register'
 import resolve, { registerMethod, DIDDocument, ParsedDID } from 'did-resolver'
 import naclutil from 'tweetnacl-util'
 import nacl from 'tweetnacl'
@@ -272,7 +272,7 @@ describe('createIdentity()', () => {
         beforeAll(() => {
           async function fakeEthrDidResolver(
             did: string,
-            parsed: ParsedDID,
+            parsed: ParsedDID
           ): Promise<DIDDocument | null> {
             return {
               '@context': 'https://w3id.org/did/v1',
