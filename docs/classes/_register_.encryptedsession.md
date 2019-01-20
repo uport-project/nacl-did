@@ -6,6 +6,10 @@
 
 **EncryptedSession**
 
+↳  [AsymEncryptedSession](_register_.asymencryptedsession.md)
+
+↳  [SymEncryptedSession](_register_.symencryptedsession.md)
+
 ## Index
 
 ### Constructors
@@ -14,18 +18,12 @@
 
 ### Properties
 
-* [from](_register_.encryptedsession.md#from)
-* [sharedKey](_register_.encryptedsession.md#sharedkey)
-* [template](_register_.encryptedsession.md#template)
 * [to](_register_.encryptedsession.md#to)
-* [toPublicKey](_register_.encryptedsession.md#topublickey)
 
 ### Methods
 
-* [close](_register_.encryptedsession.md#close)
 * [decrypt](_register_.encryptedsession.md#decrypt)
 * [encrypt](_register_.encryptedsession.md#encrypt)
-* [isOpen](_register_.encryptedsession.md#isopen)
 
 ---
 
@@ -35,18 +33,15 @@
 
 ###  constructor
 
-⊕ **new EncryptedSession**(from: *`string`*, to: *`string`*, toPublicKey: *`string`*, sharedKey: *`Uint8Array`*): [EncryptedSession](_register_.encryptedsession.md)
+⊕ **new EncryptedSession**(to: *`string`*): [EncryptedSession](_register_.encryptedsession.md)
 
-*Defined in [register.ts:227](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L227)*
+*Defined in [register.ts:248](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L248)*
 
 **Parameters:**
 
 | Name | Type |
 | ------ | ------ |
-| from | `string` |
 | to | `string` |
-| toPublicKey | `string` |
-| sharedKey | `Uint8Array` |
 
 **Returns:** [EncryptedSession](_register_.encryptedsession.md)
 
@@ -54,118 +49,50 @@ ___
 
 ## Properties
 
-<a id="from"></a>
-
-###  from
-
-**● from**: *`string`*
-
-*Defined in [register.ts:223](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L223)*
-
-___
-<a id="sharedkey"></a>
-
-### `<Private>` sharedKey
-
-**● sharedKey**: *`Uint8Array`*
-
-*Defined in [register.ts:227](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L227)*
-
-___
-<a id="template"></a>
-
-### `<Private>` template
-
-**● template**: *[EncryptedTemplate](../interfaces/_register_.encryptedtemplate.md)*
-
-*Defined in [register.ts:226](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L226)*
-
-___
 <a id="to"></a>
 
 ###  to
 
 **● to**: *`string`*
 
-*Defined in [register.ts:224](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L224)*
-
-___
-<a id="topublickey"></a>
-
-###  toPublicKey
-
-**● toPublicKey**: *`string`*
-
-*Defined in [register.ts:225](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L225)*
+*Defined in [register.ts:248](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L248)*
 
 ___
 
 ## Methods
 
-<a id="close"></a>
-
-###  close
-
-▸ **close**(): `void`
-
-*Defined in [register.ts:271](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L271)*
-
-**Returns:** `void`
-
-___
 <a id="decrypt"></a>
 
-###  decrypt
+### `<Abstract>` decrypt
 
-▸ **decrypt**(__namedParameters: *`object`*): `null` | `Uint8Array`
+▸ **decrypt**(encrypted: *[Encrypted](../interfaces/_register_.encrypted.md)*): `string`
 
-*Defined in [register.ts:260](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L260)*
-
-Decrypt data from counter party
+*Defined in [register.ts:253](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L253)*
 
 **Parameters:**
 
-**__namedParameters: `object`**
-
 | Name | Type |
 | ------ | ------ |
-| ciphertext | `string` |
-| from | `string` |
-| nonce | `string` |
-| to | `string` |
-| version | `string` |
+| encrypted | [Encrypted](../interfaces/_register_.encrypted.md) |
 
-**Returns:** `null` | `Uint8Array`
+**Returns:** `string`
 
 ___
 <a id="encrypt"></a>
 
-###  encrypt
+### `<Abstract>` encrypt
 
 ▸ **encrypt**(data: *`string` | `Uint8Array`*): `Promise`<[Encrypted](../interfaces/_register_.encrypted.md)>
 
-*Defined in [register.ts:246](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L246)*
-
-Encrypt data to recipient
+*Defined in [register.ts:252](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L252)*
 
 **Parameters:**
 
-| Name | Type | Description |
-| ------ | ------ | ------ |
-| data | `string` | `Uint8Array` |   |
+| Name | Type |
+| ------ | ------ |
+| data | `string` | `Uint8Array` |
 
 **Returns:** `Promise`<[Encrypted](../interfaces/_register_.encrypted.md)>
-
-___
-<a id="isopen"></a>
-
-###  isOpen
-
-▸ **isOpen**(): `boolean`
-
-*Defined in [register.ts:267](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L267)*
-
-**Returns:** `boolean`
 
 ___
 
