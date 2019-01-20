@@ -24,7 +24,7 @@
 
 **● data**: *`string` | `Uint8Array`*
 
-*Defined in [register.ts:33](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L33)*
+*Defined in [register.ts:33](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L33)*
 
 ___
 <a id="signature"></a>
@@ -33,7 +33,7 @@ ___
 
 **● signature**: *`Uint8Array`*
 
-*Defined in [register.ts:34](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L34)*
+*Defined in [register.ts:34](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L34)*
 
 ___
 <a id="signer"></a>
@@ -42,7 +42,7 @@ ___
 
 **● signer**: *`string`*
 
-*Defined in [register.ts:32](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L32)*
+*Defined in [register.ts:32](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L32)*
 
 ___
 

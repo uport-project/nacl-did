@@ -60,7 +60,7 @@
 
 **● ASYM_CIPHER_VERSION**: *"x25519-xsalsa20-poly1305"* = "x25519-xsalsa20-poly1305"
 
-*Defined in [register.ts:6](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L6)*
+*Defined in [register.ts:6](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L6)*
 
 ___
 <a id="encoded_jose_header"></a>
@@ -69,7 +69,7 @@ ___
 
 **● ENCODED_JOSE_HEADER**: *`string`* =  encodeBase64Url(naclutil.decodeUTF8(JSON.stringify(JOSE_HEADER)))
 
-*Defined in [register.ts:108](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L108)*
+*Defined in [register.ts:108](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L108)*
 
 ___
 <a id="sym_cipher_version"></a>
@@ -78,7 +78,7 @@ ___
 
 **● SYM_CIPHER_VERSION**: *"xsalsa20-poly1305"* = "xsalsa20-poly1305"
 
-*Defined in [register.ts:7](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L7)*
+*Defined in [register.ts:7](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L7)*
 
 ___
 <a id="randombytes"></a>
@@ -87,7 +87,7 @@ ___
 
 **● randomBytes**: *[RandomBytesSource](../interfaces/_register_.randombytessource.md)* =  naclRandomBytes
 
-*Defined in [register.ts:60](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L60)*
+*Defined in [register.ts:60](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L60)*
 
 ___
 
@@ -99,7 +99,7 @@ ___
 
 ▸ **createIdentity**(): [NaCLIdentity](../classes/_register_.naclidentity.md)
 
-*Defined in [register.ts:378](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L378)*
+*Defined in [register.ts:378](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L378)*
 
 Create a new NaCLIDentity
 
@@ -112,7 +112,7 @@ ___
 
 ▸ **decodeBase64Url**(base64url: *`string`*): `Uint8Array`
 
-*Defined in [register.ts:103](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L103)*
+*Defined in [register.ts:103](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L103)*
 
 Decodes a base64url encoded string into a Uint8Array (byte array)
 
@@ -131,7 +131,7 @@ ___
 
 ▸ **didToEncPubKey**(did: *`string`*): `Uint8Array`
 
-*Defined in [register.ts:370](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L370)*
+*Defined in [register.ts:370](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L370)*
 
 **Parameters:**
 
@@ -148,7 +148,7 @@ ___
 
 ▸ **didToSignPubKey**(did: *`string`*): `Uint8Array`
 
-*Defined in [register.ts:353](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L353)*
+*Defined in [register.ts:353](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L353)*
 
 **Parameters:**
 
@@ -165,7 +165,7 @@ ___
 
 ▸ **encodeBase64Url**(data: *`Uint8Array`*): `string`
 
-*Defined in [register.ts:85](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L85)*
+*Defined in [register.ts:85](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L85)*
 
 Encode a byte array into a base64 url encoded string
 
@@ -184,7 +184,7 @@ ___
 
 ▸ **loadIdentity**(sId: *[SerializableNaCLIdentity](../interfaces/_register_.serializablenaclidentity.md)*): [NaCLIdentity](../classes/_register_.naclidentity.md)
 
-*Defined in [register.ts:386](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L386)*
+*Defined in [register.ts:386](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L386)*
 
 Instantiates a Serialized NaCLIDentity
 
@@ -203,7 +203,7 @@ ___
 
 ▸ **naclRandomBytes**(length: *`number`*): `Promise`<`Uint8Array`>
 
-*Defined in [register.ts:56](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L56)*
+*Defined in [register.ts:56](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L56)*
 
 **Parameters:**
 
@@ -220,7 +220,7 @@ ___
 
 ▸ **normalizeClearData**(data: *`string` | `Uint8Array`*): `Uint8Array`
 
-*Defined in [register.ts:73](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L73)*
+*Defined in [register.ts:73](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L73)*
 
 Takes data which could be a string or a Uint8Array and normalizes it into a Uint8Array
 
@@ -239,7 +239,7 @@ ___
 
 ▸ **pad**(base64url: *`string`*): `string`
 
-*Defined in [register.ts:89](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L89)*
+*Defined in [register.ts:89](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L89)*
 
 **Parameters:**
 
@@ -256,7 +256,7 @@ ___
 
 ▸ **registerNaclDID**(): `void`
 
-*Defined in [register.ts:395](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L395)*
+*Defined in [register.ts:395](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L395)*
 
 Registers `nacl` DID resolver
 
@@ -269,7 +269,7 @@ ___
 
 ▸ **resolveEncryptionPublicKey**(did: *`string`*): `Promise`<`Uint8Array` | `undefined`>
 
-*Defined in [register.ts:358](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L358)*
+*Defined in [register.ts:358](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L358)*
 
 **Parameters:**
 
@@ -286,7 +286,7 @@ ___
 
 ▸ **setRandomBytesSource**(source: *[RandomBytesSource](../interfaces/_register_.randombytessource.md)*): `void`
 
-*Defined in [register.ts:66](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L66)*
+*Defined in [register.ts:66](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L66)*
 
 Sets a system wide random byte source
 
@@ -305,7 +305,7 @@ ___
 
 ▸ **verifyJWT**(jwt: *`string`*): [VerifiedJWT](../interfaces/_register_.verifiedjwt.md)
 
-*Defined in [register.ts:334](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L334)*
+*Defined in [register.ts:334](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L334)*
 
 Verify JWT of type `{ typ: 'JWT', alg: 'Ed25519' }`
 
@@ -324,7 +324,7 @@ ___
 
 ▸ **verifySignature**(signed: *[SignedData](../interfaces/_register_.signeddata.md)*): `boolean`
 
-*Defined in [register.ts:325](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L325)*
+*Defined in [register.ts:325](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L325)*
 
 Verify Signature of Signed Data
 
@@ -346,7 +346,7 @@ ___
 
 **JOSE_HEADER**: *`object`*
 
-*Defined in [register.ts:107](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L107)*
+*Defined in [register.ts:107](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L107)*
 
 <a id="jose_header.alg"></a>
 
@@ -354,7 +354,7 @@ ___
 
 **● alg**: *`string`* = "Ed25519"
 
-*Defined in [register.ts:107](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L107)*
+*Defined in [register.ts:107](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L107)*
 
 ___
 <a id="jose_header.typ"></a>
@@ -363,7 +363,7 @@ ___
 
 **● typ**: *`string`* = "JWT"
 
-*Defined in [register.ts:107](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L107)*
+*Defined in [register.ts:107](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L107)*
 
 ___
 

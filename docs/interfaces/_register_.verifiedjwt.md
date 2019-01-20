@@ -23,7 +23,7 @@
 
 **● issuer**: *`string`*
 
-*Defined in [register.ts:43](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L43)*
+*Defined in [register.ts:43](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L43)*
 
 ___
 <a id="payload"></a>
@@ -32,7 +32,7 @@ ___
 
 **● payload**: *`any`*
 
-*Defined in [register.ts:44](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L44)*
+*Defined in [register.ts:44](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L44)*
 
 ___
 

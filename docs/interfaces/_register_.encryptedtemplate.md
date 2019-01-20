@@ -27,7 +27,7 @@
 
 **● from**: *`undefined` | `string`*
 
-*Defined in [register.ts:11](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L11)*
+*Defined in [register.ts:11](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L11)*
 
 ___
 <a id="to"></a>
@@ -36,7 +36,7 @@ ___
 
 **● to**: *`string`*
 
-*Defined in [register.ts:10](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L10)*
+*Defined in [register.ts:10](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L10)*
 
 ___
 <a id="topublickey"></a>
@@ -45,7 +45,7 @@ ___
 
 **● toPublicKey**: *`undefined` | `string`*
 
-*Defined in [register.ts:13](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L13)*
+*Defined in [register.ts:13](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L13)*
 
 ___
 <a id="version"></a>
@@ -54,7 +54,7 @@ ___
 
 **● version**: *`string`*
 
-*Defined in [register.ts:12](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L12)*
+*Defined in [register.ts:12](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L12)*
 
 ___
 

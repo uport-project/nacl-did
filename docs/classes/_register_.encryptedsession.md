@@ -35,7 +35,7 @@
 
 ⊕ **new EncryptedSession**(to: *`string`*): [EncryptedSession](_register_.encryptedsession.md)
 
-*Defined in [register.ts:248](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L248)*
+*Defined in [register.ts:248](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L248)*
 
 **Parameters:**
 
@@ -55,7 +55,7 @@ ___
 
 **● to**: *`string`*
 
-*Defined in [register.ts:248](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L248)*
+*Defined in [register.ts:248](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L248)*
 
 ___
 
@@ -67,7 +67,7 @@ ___
 
 ▸ **decrypt**(encrypted: *[Encrypted](../interfaces/_register_.encrypted.md)*): `string`
 
-*Defined in [register.ts:253](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L253)*
+*Defined in [register.ts:253](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L253)*
 
 **Parameters:**
 
@@ -84,7 +84,7 @@ ___
 
 ▸ **encrypt**(data: *`string` | `Uint8Array`*): `Promise`<[Encrypted](../interfaces/_register_.encrypted.md)>
 
-*Defined in [register.ts:252](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L252)*
+*Defined in [register.ts:252](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L252)*
 
 **Parameters:**
 

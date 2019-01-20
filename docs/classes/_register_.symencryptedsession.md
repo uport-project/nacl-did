@@ -36,7 +36,7 @@
 
 *Overrides [EncryptedSession](_register_.encryptedsession.md).[constructor](_register_.encryptedsession.md#constructor)*
 
-*Defined in [register.ts:299](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L299)*
+*Defined in [register.ts:299](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L299)*
 
 **Parameters:**
 
@@ -56,7 +56,7 @@ ___
 
 **● id**: *[NaCLIdentity](_register_.naclidentity.md)*
 
-*Defined in [register.ts:299](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L299)*
+*Defined in [register.ts:299](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L299)*
 
 ___
 <a id="to"></a>
@@ -67,7 +67,7 @@ ___
 
 *Inherited from [EncryptedSession](_register_.encryptedsession.md).[to](_register_.encryptedsession.md#to)*
 
-*Defined in [register.ts:248](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L248)*
+*Defined in [register.ts:248](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L248)*
 
 ___
 
@@ -81,7 +81,7 @@ ___
 
 *Overrides [EncryptedSession](_register_.encryptedsession.md).[decrypt](_register_.encryptedsession.md#decrypt)*
 
-*Defined in [register.ts:316](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L316)*
+*Defined in [register.ts:316](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L316)*
 
 Decrypt data from counter party
 
@@ -102,7 +102,7 @@ ___
 
 *Overrides [EncryptedSession](_register_.encryptedsession.md).[encrypt](_register_.encryptedsession.md#encrypt)*
 
-*Defined in [register.ts:309](https://github.com/uport-project/nacl-did/blob/89cb74c/src/register.ts#L309)*
+*Defined in [register.ts:309](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L309)*
 
 Encrypt data to recipient
 
