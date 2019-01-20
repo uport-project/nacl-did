@@ -392,7 +392,7 @@ export function loadIdentity(sId: SerializableNaCLIdentity): NaCLIdentity {
 /**
  * Registers `nacl` DID resolver
  */
-export default function register() {
+export function registerNaclDID() {
   async function naclDIDResolve(
     did: string,
     parsed: ParsedDID,

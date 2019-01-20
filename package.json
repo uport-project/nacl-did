@@ -1,10 +1,20 @@
 {
   "name": "nacl-did",
-  "version": "0.3.0",
+  "version": "0.4.0-alpha-1",
   "description": "Resolve and manage DIDs using NaCL crypto suites",
   "main": "lib/register.js",
+  "module": "lib/register.es6.js",
+  "umd:main": "lib/register.umd.js",
   "types": "lib/register.d.ts",
+  "source": "src/register.ts",
   "author": "Pelle Braendgaard <pelle.braendgaard@consensys.net>",
+  "files": [
+    "lib",
+    "dist",
+    "src",
+    "docs",
+    "README.md"
+  ],
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
@@ -17,13 +27,12 @@
     "tweetnacl-util": "^0.15.0"
   },
   "scripts": {
-    "build:es5": "tsc",
-    "build:browser": "./node_modules/.bin/webpack",
-    "build": "npm run build:es5 && npm run test && npm run build:browser",
+    "build:js":"./node_modules/.bin/microbundle",
+    "build": "npm run build:js && npm run test",
     "test": "./node_modules/.bin/jest --coverage",
     "test:watch": "./node_modules/.bin/jest --watch",
     "test:ci": "./node_modules/.bin/jest -u --coverage && cat ./coverage/lcov.info | ./node_modules/.bin/codacy-coverage -v",
-    "dev": "tsc --watch",
+    "dev": "./node_modules/.bin/microbundle --watch",
     "format": "prettier",
     "build:docs": "./node_modules/.bin/typedoc --theme markdown --out docs/ src/register.ts ./index.d.ts",
     "prepare": "npm run build"
@@ -36,6 +45,7 @@
     "jest": "^23.6.0",
     "kitimat": "^0.1.8",
     "kitimat-jest": "^0.1.8",
+    "microbundle": "^0.9.0",
     "mockdate": "^2.0.2",
     "prettier": "^1.15.3",
     "regenerator-runtime": "^0.12.1",
@@ -45,9 +55,7 @@
     "tslint-eslint-rules": "^5.4.0",
     "typedoc": "^0.13.0",
     "typedoc-plugin-markdown": "^1.1.20",
-    "typescript": "^3.2.2",
-    "webpack": "^4.28.2",
-    "webpack-cli": "^3.1.2"
+    "typescript": "^3.2.2"
   },
   "jest": {
     "transform": {

@@ -1,7 +1,6 @@
-import { check, Fuzzer, string, posInteger, object, integer, asciiString, oneOf } from 'kitimat-jest'
-import register, { createIdentity, loadIdentity, verifySignature, verifyJWT, encodeBase64Url, decodeBase64Url, didToEncPubKey, EncryptedSession, Encrypted } from '../register'
-import registerEthrDid from 'ethr-did-resolver'
-import resolve from 'did-resolver'
+import { check, Fuzzer, string, posInteger, object, asciiString } from 'kitimat-jest'
+import { registerNaclDID, createIdentity, loadIdentity, verifySignature, verifyJWT, encodeBase64Url, decodeBase64Url, EncryptedSession, Encrypted } from '../register'
+import resolve, { registerMethod, DIDDocument, ParsedDID } from 'did-resolver'
 import naclutil from 'tweetnacl-util'
 import nacl from 'tweetnacl'
 
@@ -9,7 +8,7 @@ import MockDate from 'mockdate'
 
 const NOW = 1485321133
 MockDate.set(NOW * 1000)
-register()
+registerNaclDID()
 
 const clearTexts: Fuzzer<string> = string()
 const byteArrays: Fuzzer<Uint8Array> = posInteger({ maxSize: 10000 }).map(i => nacl.randomBytes(i))
@@ -271,8 +270,28 @@ describe('createIdentity()', () => {
         const fail = 'did:fail:hello'
 
         beforeAll(() => {
-          registerEthrDid()
-        })
+          async function fakeEthrDidResolver(
+            did: string,
+            parsed: ParsedDID
+          ): Promise<DIDDocument | null> {
+            return {
+              '@context': 'https://w3id.org/did/v1',
+              id: did,
+              publicKey: [{
+                id: `${did}#key1`,
+                type: 'Secp256k1VerificationKey2018',
+                owner: did,
+                ethereumAddress: parsed.id
+              }],
+              authentication: [{
+                type: 'Secp256k1SignatureAuthentication2018',
+                publicKey: `${did}#key1`
+              }]
+            }
+          }
+          registerMethod('ethr', fakeEthrDidResolver)
+        }
+        )
 
         describe('default behavior', () => {
           it('should throw an exception', async () => {
