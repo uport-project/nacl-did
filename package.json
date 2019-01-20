@@ -17,9 +17,11 @@
     "tweetnacl-util": "^0.15.0"
   },
   "scripts": {
-    "build:es5": "tsc",
+    "build:es5": "./node_modules/.bin/tsc",
+    "build:es6": "./node_modules/.bin/tsc -t ES2015 -m es6 --outDir lib-es6",
     "build:browser": "./node_modules/.bin/webpack",
-    "build": "npm run build:es5 && npm run test && npm run build:browser",
+    "build": "npm run clean && npm run build:es5 && npm run build:es6 && npm run test && npm run build:browser",
+    "clean": "rm -rf ./dist ./lib ./lib-es6",
     "test": "./node_modules/.bin/jest --coverage",
     "test:watch": "./node_modules/.bin/jest --watch",
     "test:ci": "./node_modules/.bin/jest -u --coverage && cat ./coverage/lcov.info | ./node_modules/.bin/codacy-coverage -v",
@@ -31,6 +33,7 @@
   "devDependencies": {
     "@types/jest": "^23.3.10",
     "@types/mockdate": "^2.0.0",
+    "awesome-typescript-loader": "^5.2.1",
     "codacy-coverage": "^3.4.0",
     "ethr-did-resolver": "^0.2.0",
     "jest": "^23.6.0",
