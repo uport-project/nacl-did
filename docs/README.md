@@ -9,6 +9,8 @@ source: "[https://github.com/uport-project/nacl-did/blob/develop/README.md"](htt
 NaCL DID Resolver and Manager
 =============================
 
+[![CircleCI](https://circleci.com/gh/uport-project/nacl-did.svg?style=svg)](https://circleci.com/gh/uport-project/nacl-did) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/8ce0d076d47147deb76bc7bb43df9216)](https://app.codacy.com/app/pelle/nacl-did?utm_source=github.com&utm_medium=referral&utm_content=uport-project/nacl-did&utm_campaign=Badge_Grade_Dashboard)
+
 This library is intended to use cryptographic keys from [NaCL](http://nacl.cr.yp.to) cryptographic suite as [Decentralized Identifiers](https://w3c-ccg.github.io/did-spec/#decentralized-identifiers-dids) and generate an associated [DID Document](https://w3c-ccg.github.io/did-spec/#did-documents).
 
 Motivation. There is a need for non updateable DID's for use in IOT and other applications, where lack of network, size of code base and other such concerns are paramount to adoption. These concerns need to be addressed while not lowering the overall security guarantees.
@@ -135,7 +137,7 @@ The built in JWT implementation only signs and verifies JWT's using the NaCL DID
 Encryption
 ----------
 
-The NaCL DID method supports public key encryption using NaCL's `x25519-xsalsa20-poly1305` algorithm.
+The NaCL DID method supports public key encryption using NaCL's `x25519-xsalsa20-poly1305` (`box`) algorithm. If the `to` field is my own DID it uses NaCL's symmetric encryption `xsalsa20-poly1305` (`secret-box`) algorithm instead.
 
 Use the `encrypt(to, data)` and `decrypt(encrypted)` methods.
 
@@ -164,6 +166,28 @@ const encrypted = await session.encrypt('hello')
 const clear = session.decrypt(encrypted)
 ```
 
+In cases that the counterparty identity (the recipient) does not have an encryption key in it's DID document you can pass in an optional encryption public key received through an external process, but it will also default to any public key in the DID document.
+
+```javascript
+import { createIdentity } from 'nacl-did'
+
+const identity = createIdentity()
+const session = identity.openSession('did:ethr:0x2Cc31912B2b0f3075A87b3640923D45A26cef3Ee', 'mJsioLTc7iyILsSUT8qmWyTnzytSKEmcg8bAeJ2R33U=')
+const encrypted = await session.encrypt('hello')
+const clear = session.decrypt(encrypted)
+```
+
+In other cases you want to always encrypt data to yourself, even if the counterparty doesn't have a public key. Just pass in a `true` to the `openSession`.
+
+```javascript
+import { createIdentity } from 'nacl-did'
+
+const identity = createIdentity()
+const session = identity.openSession('did:ethr:0x2Cc31912B2b0f3075A87b3640923D45A26cef3Ee', true)
+const encrypted = await session.encrypt('hello')
+const clear = session.decrypt(encrypted)
+```
+
 Resolving a DID document
 ------------------------
 
@@ -171,9 +195,9 @@ The resolver presents a simple `resolver()` function that returns a ES6 Promise 
 
 ```javascript
 import resolve from 'did-resolver'
-import registerResolver from 'nacl-did'
+import { registerNaclDID } from 'nacl-did'
 
-registerResolver()
+registerNaclDID()
 
 resolve('did:nacl:Md8JiMIwsapml/FtQ2ngnGftNP5UmVCAUuhnLyAsPxI=').then(doc => console.log)
 

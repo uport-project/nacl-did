@@ -11,7 +11,7 @@ Implement this to use a custom async random source
 ## Callable
 ▸ **__call**(length: *`number`*): `Promise`<`Uint8Array`>
 
-*Defined in [register.ts:51](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L51)*
+*Defined in [register.ts:52](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L52)*
 
 Implement this to use a custom async random source
 

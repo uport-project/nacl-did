@@ -1,29 +1,38 @@
 {
   "name": "nacl-did",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Resolve and manage DIDs using NaCL crypto suites",
   "main": "lib/register.js",
+  "module": "lib/register.es6.js",
+  "umd:main": "lib/register.umd.js",
   "types": "lib/register.d.ts",
+  "source": "src/register.ts",
   "author": "Pelle Braendgaard <pelle.braendgaard@consensys.net>",
+  "files": [
+    "lib",
+    "dist",
+    "src",
+    "docs",
+    "README.md"
+  ],
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/uport-project/nacl-did.git"
   },
   "dependencies": {
-    "did-resolver": "0.0.6-alpha5",
+    "did-resolver": "0.0.6",
     "ed2curve": "git+https://github.com/uport-project/ed2curve-js.git",
     "tweetnacl": "^1.0.0",
     "tweetnacl-util": "^0.15.0"
   },
   "scripts": {
-    "build:es5": "tsc",
-    "build:browser": "./node_modules/.bin/webpack",
-    "build": "npm run build:es5 && npm run test && npm run build:browser",
+    "build:js": "./node_modules/.bin/microbundle",
+    "build": "npm run build:js && npm run test && npm run build:docs",
     "test": "./node_modules/.bin/jest --coverage",
     "test:watch": "./node_modules/.bin/jest --watch",
-    "test:ci": "./node_modules/.bin/jest -u --coverage",
-    "dev": "tsc --watch",
+    "test:ci": "./node_modules/.bin/jest -u --coverage && cat ./coverage/lcov.info | ./node_modules/.bin/codacy-coverage -v",
+    "dev": "./node_modules/.bin/microbundle --watch",
     "format": "prettier",
     "build:docs": "./node_modules/.bin/typedoc --theme markdown --out docs/ src/register.ts ./index.d.ts",
     "prepare": "npm run build"
@@ -31,8 +40,12 @@
   "devDependencies": {
     "@types/jest": "^23.3.10",
     "@types/mockdate": "^2.0.0",
-    "ethr-did-resolver": "^0.2.0-alpha1",
+    "codacy-coverage": "^3.4.0",
+    "ethr-did-resolver": "^0.2.0",
     "jest": "^23.6.0",
+    "kitimat": "^0.1.8",
+    "kitimat-jest": "^0.1.8",
+    "microbundle": "^0.9.0",
     "mockdate": "^2.0.2",
     "prettier": "^1.15.3",
     "regenerator-runtime": "^0.12.1",
@@ -40,11 +53,9 @@
     "tslint": "^5.12.0",
     "tslint-config-prettier": "^1.17.0",
     "tslint-eslint-rules": "^5.4.0",
-    "typedoc": "^0.13.0",
-    "typedoc-plugin-markdown": "^1.1.20",
-    "typescript": "^3.2.2",
-    "webpack": "^4.28.2",
-    "webpack-cli": "^3.1.2"
+    "typedoc": "^0.14.2",
+    "typedoc-plugin-markdown": "^1.1.22",
+    "typescript": "^3.2.2"
   },
   "jest": {
     "transform": {

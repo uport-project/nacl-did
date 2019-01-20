@@ -23,12 +23,12 @@ interface NaCLKeyPair {
   secretKey: Uint8Array
 }
 
-interface SerializableNaCLIdentity {
+export interface SerializableNaCLIdentity {
   did: string
   privateKey: string
 }
 
-interface SignedData {
+export interface SignedData {
   signer: string
   data: string | Uint8Array
   signature: Uint8Array
@@ -39,7 +39,7 @@ interface JOSEHeader {
   alg: string
 }
 
-interface VerifiedJWT {
+export interface VerifiedJWT {
   issuer: string,
   payload: any
 }
@@ -112,10 +112,10 @@ const ENCODED_JOSE_HEADER = encodeBase64Url(naclutil.decodeUTF8(JSON.stringify(J
  */
 export class NaCLIdentity {
   readonly did: string
-  private readonly privateKey: Uint8Array
-  private readonly encPrivateKey: Uint8Array
   readonly publicKey: Uint8Array
   readonly encPublicKey: Uint8Array
+  private readonly privateKey: Uint8Array
+  private readonly encPrivateKey: Uint8Array
 
   /**
    * Create a new NaCL Identity for a KeyPair
@@ -217,7 +217,7 @@ export class NaCLIdentity {
       const nonce = await randomBytes(nacl.box.nonceLength)
       const ciphertext = nacl.box(normalizeClearData(data), nonce, toPubKey, this.encPrivateKey)
       return {
-        to: to,
+        to,
         from: this.did,
         toPublicKey: naclutil.encodeBase64(toPubKey),
         nonce: naclutil.encodeBase64(nonce),
@@ -245,7 +245,7 @@ export class NaCLIdentity {
 }
 
 export abstract class EncryptedSession {
-  public readonly to: string
+  readonly to: string
   constructor(to: string) {
     this.to = to
   }
@@ -253,8 +253,8 @@ export abstract class EncryptedSession {
   abstract decrypt(encrypted: Encrypted): string
 }
 class AsymEncryptedSession extends EncryptedSession {
-  public readonly from: string
-  public readonly toPublicKey: string
+  readonly from: string
+  readonly toPublicKey: string
   private readonly template: EncryptedTemplate
   private sharedKey: Uint8Array
 
@@ -281,7 +281,7 @@ class AsymEncryptedSession extends EncryptedSession {
     return {
       ...this.template,
       nonce: naclutil.encodeBase64(nonce),
-      ciphertext: naclutil.encodeBase64(ciphertext),
+      ciphertext: naclutil.encodeBase64(ciphertext)
     }
   }
 
@@ -336,6 +336,13 @@ export function verifyJWT(jwt: string): VerifiedJWT {
   if (parts[0] !== ENCODED_JOSE_HEADER) throw new Error('Incorrect JWT Type')
   const payload = JSON.parse(naclutil.encodeUTF8(decodeBase64Url(parts[1])))
   if (!payload.iss) throw new Error('JWT did not contain an `iss`')
+  if (payload.exp !== undefined) {
+    if (typeof payload.exp !== 'number') throw new Error(`Invalid exp in JWT ${payload.exp} = ${typeof payload.exp}`)
+    const exp = payload.exp * 1000
+    if (exp < new Date().getTime()) {
+      throw new Error(`JWT expired on: ${payload.exp}`)
+    }
+  }
   if (verifySignature({ signer: payload.iss, data: `${parts[0]}.${parts[1]}`, signature: decodeBase64Url(parts[2]) })) {
     return { issuer: payload.iss, payload }
   } else {
@@ -385,8 +392,8 @@ export function loadIdentity(sId: SerializableNaCLIdentity): NaCLIdentity {
 /**
  * Registers `nacl` DID resolver
  */
-export default function register() {
-  async function resolve(
+export function registerNaclDID() {
+  async function naclDIDResolve(
     did: string,
     parsed: ParsedDID,
   ): Promise<DIDDocument | null> {
@@ -411,5 +418,5 @@ export default function register() {
       }]
     }
   }
-  registerMethod('nacl', resolve)
+  registerMethod('nacl', naclDIDResolve)
 }
