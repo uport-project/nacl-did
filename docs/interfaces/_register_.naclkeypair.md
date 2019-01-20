@@ -23,7 +23,7 @@
 
 **● publicKey**: *`Uint8Array`*
 
-*Defined in [register.ts:21](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L21)*
+*Defined in [register.ts:22](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L22)*
 
 ___
 <a id="secretkey"></a>
@@ -32,7 +32,7 @@ ___
 
 **● secretKey**: *`Uint8Array`*
 
-*Defined in [register.ts:22](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L22)*
+*Defined in [register.ts:23](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L23)*
 
 ___
 

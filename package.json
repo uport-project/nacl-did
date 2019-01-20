@@ -1,6 +1,6 @@
 {
   "name": "nacl-did",
-  "version": "0.4.0-alpha-1",
+  "version": "0.4.0",
   "description": "Resolve and manage DIDs using NaCL crypto suites",
   "main": "lib/register.js",
   "module": "lib/register.es6.js",
@@ -27,8 +27,8 @@
     "tweetnacl-util": "^0.15.0"
   },
   "scripts": {
-    "build:js":"./node_modules/.bin/microbundle",
-    "build": "npm run build:js && npm run test",
+    "build:js": "./node_modules/.bin/microbundle",
+    "build": "npm run build:js && npm run test && npm run build:docs",
     "test": "./node_modules/.bin/jest --coverage",
     "test:watch": "./node_modules/.bin/jest --watch",
     "test:ci": "./node_modules/.bin/jest -u --coverage && cat ./coverage/lcov.info | ./node_modules/.bin/codacy-coverage -v",
@@ -53,8 +53,8 @@
     "tslint": "^5.12.0",
     "tslint-config-prettier": "^1.17.0",
     "tslint-eslint-rules": "^5.4.0",
-    "typedoc": "^0.13.0",
-    "typedoc-plugin-markdown": "^1.1.20",
+    "typedoc": "^0.14.2",
+    "typedoc-plugin-markdown": "^1.1.22",
     "typescript": "^3.2.2"
   },
   "jest": {

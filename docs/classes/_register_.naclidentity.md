@@ -42,7 +42,7 @@ Encapsulates the functionality of an identity using the `nacl-did` method
 
 ⊕ **new NaCLIdentity**(kp: *[NaCLKeyPair](../interfaces/_register_.naclkeypair.md)*): [NaCLIdentity](_register_.naclidentity.md)
 
-*Defined in [register.ts:117](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L117)*
+*Defined in [register.ts:118](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L118)*
 
 Create a new NaCL Identity for a KeyPair
 
@@ -64,7 +64,7 @@ ___
 
 **● did**: *`string`*
 
-*Defined in [register.ts:113](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L113)*
+*Defined in [register.ts:114](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L114)*
 
 ___
 <a id="encprivatekey"></a>
@@ -73,7 +73,7 @@ ___
 
 **● encPrivateKey**: *`Uint8Array`*
 
-*Defined in [register.ts:115](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L115)*
+*Defined in [register.ts:118](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L118)*
 
 ___
 <a id="encpublickey"></a>
@@ -82,7 +82,7 @@ ___
 
 **● encPublicKey**: *`Uint8Array`*
 
-*Defined in [register.ts:117](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L117)*
+*Defined in [register.ts:116](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L116)*
 
 ___
 <a id="privatekey"></a>
@@ -91,7 +91,7 @@ ___
 
 **● privateKey**: *`Uint8Array`*
 
-*Defined in [register.ts:114](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L114)*
+*Defined in [register.ts:117](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L117)*
 
 ___
 <a id="publickey"></a>
@@ -100,7 +100,7 @@ ___
 
 **● publicKey**: *`Uint8Array`*
 
-*Defined in [register.ts:116](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L116)*
+*Defined in [register.ts:115](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L115)*
 
 ___
 
@@ -112,7 +112,7 @@ ___
 
 ▸ **createJWT**(payload: *`Object`*): `string`
 
-*Defined in [register.ts:164](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L164)*
+*Defined in [register.ts:165](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L165)*
 
 Creates a signed JWT using the following header `{ typ: 'JWT', alg: 'Ed25519' }`
 
@@ -129,9 +129,9 @@ ___
 
 ###  decrypt
 
-▸ **decrypt**(__namedParameters: *`object`*): `null` | `Uint8Array`
+▸ **decrypt**(__namedParameters: *`object`*): `string`
 
-*Defined in [register.ts:213](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L213)*
+*Defined in [register.ts:231](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L231)*
 
 **Parameters:**
 
@@ -140,12 +140,12 @@ ___
 | Name | Type |
 | ------ | ------ |
 | ciphertext | `string` |
-| from | `string` |
+| from | `undefined` | `string` |
 | nonce | `string` |
 | to | `string` |
 | version | `string` |
 
-**Returns:** `null` | `Uint8Array`
+**Returns:** `string`
 
 ___
 <a id="encrypt"></a>
@@ -154,7 +154,7 @@ ___
 
 ▸ **encrypt**(to: *`string`*, data: *`string` | `Uint8Array`*): `Promise`<[Encrypted](../interfaces/_register_.encrypted.md)>
 
-*Defined in [register.ts:198](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L198)*
+*Defined in [register.ts:205](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L205)*
 
 Encrypt a single message to send to a recipient
 
@@ -162,7 +162,7 @@ Encrypt a single message to send to a recipient
 
 | Name | Type | Description |
 | ------ | ------ | ------ |
-| to | `string` |  DID of recipient |
+| to | `string` |  DID of recipient (uses symetric encryption if to is my own DID) |
 | data | `string` | `Uint8Array` |  Data to encrypt |
 
 **Returns:** `Promise`<[Encrypted](../interfaces/_register_.encrypted.md)>
@@ -174,16 +174,20 @@ ___
 
 ▸ **openSession**(to: *`string`*, overridePublicKey?: *`boolean` | `string`*): `Promise`<[EncryptedSession](_register_.encryptedsession.md)>
 
-*Defined in [register.ts:177](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L177)*
+*Defined in [register.ts:185](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L185)*
 
 Opens an efficient session for encrypting and decrypting messages between this and another DID.
+
+An optional publicKey that has been exchanged out of band can be passed into the second parameter. This will ONLY be used if no encryption public key was found in DID document.
+
+If you would like to encrypt things to your self regardless if a public key was not found, pass in the value of `true` as the second argument. It will then be encrypted symetrically instead.
 
 **Parameters:**
 
 | Name | Type | Default value | Description |
 | ------ | ------ | ------ | ------ |
 | to | `string` | - |  DID of recipient |
-| `Default value` overridePublicKey | `boolean` | `string` | false |  If DID method does not contain an encryption public key use this key or \`true\` to create a new ephemeral key |
+| `Default value` overridePublicKey | `boolean` | `string` | false |  If DID method does not contain an encryption public key use this key<br><br> |
 
 **Returns:** `Promise`<[EncryptedSession](_register_.encryptedsession.md)>
 
@@ -194,7 +198,7 @@ ___
 
 ▸ **sign**(data: *`string` | `Uint8Array`*): [SignedData](../interfaces/_register_.signeddata.md)
 
-*Defined in [register.ts:144](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L144)*
+*Defined in [register.ts:145](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L145)*
 
 Signs data and returns the data, did and signature
 
@@ -213,7 +217,7 @@ ___
 
 ▸ **toJSON**(): [SerializableNaCLIdentity](../interfaces/_register_.serializablenaclidentity.md)
 
-*Defined in [register.ts:136](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L136)*
+*Defined in [register.ts:137](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L137)*
 
 Serializes NaclDID to just it's base64 encoded private key and DID
 
@@ -226,7 +230,7 @@ ___
 
 ▸ **verify**(signed: *[SignedData](../interfaces/_register_.signeddata.md)*): `boolean`
 
-*Defined in [register.ts:156](https://github.com/uport-project/nacl-did/blob/83e7acd/src/register.ts#L156)*
+*Defined in [register.ts:157](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L157)*
 
 Verifies that Signed Data was signed by this identity
 

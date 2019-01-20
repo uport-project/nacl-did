@@ -188,9 +188,9 @@ The resolver presents a simple `resolver()` function that returns a ES6 Promise 
 
 ```javascript
 import resolve from 'did-resolver'
-import registerResolver from 'nacl-did'
+import { registerNaclDID } from 'nacl-did'
 
-registerResolver()
+registerNaclDID()
 
 resolve('did:nacl:Md8JiMIwsapml/FtQ2ngnGftNP5UmVCAUuhnLyAsPxI=').then(doc => console.log)
 
