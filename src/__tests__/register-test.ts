@@ -75,7 +75,7 @@ describe('createIdentity()', () => {
     })
 
     it('should be loadable', () => {
-      expect(loadIdentity(serialized)).toEqual(id)
+      expect(loadIdentity(serialized, didResolver)).toEqual(id)
     })
   })
 

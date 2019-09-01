@@ -384,8 +384,8 @@ export function createIdentity(didResolver?: Resolver): NaCLIdentity {
  * Instantiates a Serialized NaCLIDentity
  * @param sId 
  */
-export function loadIdentity(sId: SerializableNaCLIdentity): NaCLIdentity {
-  const id = new NaCLIdentity(nacl.sign.keyPair.fromSecretKey(naclutil.decodeBase64(sId.privateKey)))
+export function loadIdentity(sId: SerializableNaCLIdentity, didResolver?: Resolver): NaCLIdentity {
+  const id = new NaCLIdentity(nacl.sign.keyPair.fromSecretKey(naclutil.decodeBase64(sId.privateKey)), didResolver)
   if (id.did !== sId.did) throw new Error('Provided PrivateKey does not match the DID')
   return id
 }

@@ -181,19 +181,17 @@ const encrypted = await session.encrypt('hello')
 const clear = session.decrypt(encrypted)
 ```
 
-
 ## Resolving a DID document
 
 The resolver presents a simple `resolver()` function that returns a ES6 Promise returning the DID document.
 
 ```javascript
-import resolve from 'did-resolver'
-import { registerNaclDID } from 'nacl-did'
+import { Resolver } from 'did-resolver'
+import { resolver as naclDidResolver } from 'nacl-did'
 
-registerNaclDID()
-
-resolve('did:nacl:Md8JiMIwsapml/FtQ2ngnGftNP5UmVCAUuhnLyAsPxI=').then(doc => console.log)
+const didResolver = new Resolver({ nacl: naclDidResolver })
+didResolver.resolve('did:nacl:Md8JiMIwsapml/FtQ2ngnGftNP5UmVCAUuhnLyAsPxI=').then(doc => console.log)
 
 // You can also use ES7 async/await syntax
-const doc = await resolve('did:nacl:Md8JiMIwsapml/FtQ2ngnGftNP5UmVCAUuhnLyAsPxI=')
+const doc = await didResolver.resolve('did:nacl:Md8JiMIwsapml/FtQ2ngnGftNP5UmVCAUuhnLyAsPxI=')
 ```
