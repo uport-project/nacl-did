@@ -1,12 +1,14 @@
-[nacl-did](../README.md) > ["register"](../modules/_register_.md) > [SymEncryptedSession](../classes/_register_.symencryptedsession.md)
+**[nacl-did](../README.md)**
+
+[Globals](../globals.md) › ["register"](../modules/_register_.md) › [SymEncryptedSession](_register_.symencryptedsession.md)
 
 # Class: SymEncryptedSession
 
 ## Hierarchy
 
- [EncryptedSession](_register_.encryptedsession.md)
+* [EncryptedSession](_register_.encryptedsession.md)
 
-**↳ SymEncryptedSession**
+  * **SymEncryptedSession**
 
 ## Index
 
@@ -16,7 +18,7 @@
 
 ### Properties
 
-* [id](_register_.symencryptedsession.md#id)
+* [id](_register_.symencryptedsession.md#private-id)
 * [to](_register_.symencryptedsession.md#to)
 
 ### Methods
@@ -24,95 +26,78 @@
 * [decrypt](_register_.symencryptedsession.md#decrypt)
 * [encrypt](_register_.symencryptedsession.md#encrypt)
 
----
-
 ## Constructors
-
-<a id="constructor"></a>
 
 ###  constructor
 
-⊕ **new SymEncryptedSession**(id: *[NaCLIdentity](_register_.naclidentity.md)*): [SymEncryptedSession](_register_.symencryptedsession.md)
+\+ **new SymEncryptedSession**(`id`: [NaCLIdentity](_register_.naclidentity.md)): *[SymEncryptedSession](_register_.symencryptedsession.md)*
 
 *Overrides [EncryptedSession](_register_.encryptedsession.md).[constructor](_register_.encryptedsession.md#constructor)*
 
-*Defined in [register.ts:299](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L299)*
+*Defined in [register.ts:312](https://github.com/uport-project/nacl-did/blob/450728f/src/register.ts#L312)*
 
 **Parameters:**
 
-| Name | Type |
-| ------ | ------ |
-| id | [NaCLIdentity](_register_.naclidentity.md) |
+Name | Type |
+------ | ------ |
+`id` | [NaCLIdentity](_register_.naclidentity.md) |
 
-**Returns:** [SymEncryptedSession](_register_.symencryptedsession.md)
-
-___
+**Returns:** *[SymEncryptedSession](_register_.symencryptedsession.md)*
 
 ## Properties
 
-<a id="id"></a>
+### `Private` id
 
-### `<Private>` id
+• **id**: *[NaCLIdentity](_register_.naclidentity.md)*
 
-**● id**: *[NaCLIdentity](_register_.naclidentity.md)*
-
-*Defined in [register.ts:299](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L299)*
+*Defined in [register.ts:312](https://github.com/uport-project/nacl-did/blob/450728f/src/register.ts#L312)*
 
 ___
-<a id="to"></a>
 
 ###  to
 
-**● to**: *`string`*
+• **to**: *string*
 
 *Inherited from [EncryptedSession](_register_.encryptedsession.md).[to](_register_.encryptedsession.md#to)*
 
-*Defined in [register.ts:248](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L248)*
-
-___
+*Defined in [register.ts:261](https://github.com/uport-project/nacl-did/blob/450728f/src/register.ts#L261)*
 
 ## Methods
 
-<a id="decrypt"></a>
-
 ###  decrypt
 
-▸ **decrypt**(encrypted: *[Encrypted](../interfaces/_register_.encrypted.md)*): `string`
+▸ **decrypt**(`encrypted`: [Encrypted](../interfaces/_register_.encrypted.md)): *string*
 
-*Overrides [EncryptedSession](_register_.encryptedsession.md).[decrypt](_register_.encryptedsession.md#decrypt)*
+*Overrides [EncryptedSession](_register_.encryptedsession.md).[decrypt](_register_.encryptedsession.md#abstract-decrypt)*
 
-*Defined in [register.ts:316](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L316)*
+*Defined in [register.ts:329](https://github.com/uport-project/nacl-did/blob/450728f/src/register.ts#L329)*
 
 Decrypt data from counter party
 
 **Parameters:**
 
-| Name | Type |
-| ------ | ------ |
-| encrypted | [Encrypted](../interfaces/_register_.encrypted.md) |
+Name | Type |
+------ | ------ |
+`encrypted` | [Encrypted](../interfaces/_register_.encrypted.md) |
 
-**Returns:** `string`
+**Returns:** *string*
 
 ___
-<a id="encrypt"></a>
 
 ###  encrypt
 
-▸ **encrypt**(data: *`string` | `Uint8Array`*): `Promise`<[Encrypted](../interfaces/_register_.encrypted.md)>
+▸ **encrypt**(`data`: string | Uint8Array): *Promise‹[Encrypted](../interfaces/_register_.encrypted.md)›*
 
-*Overrides [EncryptedSession](_register_.encryptedsession.md).[encrypt](_register_.encryptedsession.md#encrypt)*
+*Overrides [EncryptedSession](_register_.encryptedsession.md).[encrypt](_register_.encryptedsession.md#abstract-encrypt)*
 
-*Defined in [register.ts:309](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L309)*
+*Defined in [register.ts:322](https://github.com/uport-project/nacl-did/blob/450728f/src/register.ts#L322)*
 
 Encrypt data to recipient
 
 **Parameters:**
 
-| Name | Type | Description |
-| ------ | ------ | ------ |
-| data | `string` | `Uint8Array` |   |
+Name | Type | Description |
+------ | ------ | ------ |
+`data` | string \| Uint8Array |   |
 
-**Returns:** `Promise`<[Encrypted](../interfaces/_register_.encrypted.md)>
-
-___
-
+**Returns:** *Promise‹[Encrypted](../interfaces/_register_.encrypted.md)›*

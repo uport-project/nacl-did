@@ -1,4 +1,6 @@
-[nacl-did](../README.md) > ["register"](../modules/_register_.md) > [NaCLIdentity](../classes/_register_.naclidentity.md)
+**[nacl-did](../README.md)**
+
+[Globals](../globals.md) › ["register"](../modules/_register_.md) › [NaCLIdentity](_register_.naclidentity.md)
 
 # Class: NaCLIdentity
 
@@ -6,7 +8,7 @@ Encapsulates the functionality of an identity using the `nacl-did` method
 
 ## Hierarchy
 
-**NaCLIdentity**
+* **NaCLIdentity**
 
 ## Index
 
@@ -17,10 +19,11 @@ Encapsulates the functionality of an identity using the `nacl-did` method
 ### Properties
 
 * [did](_register_.naclidentity.md#did)
-* [encPrivateKey](_register_.naclidentity.md#encprivatekey)
+* [encPrivateKey](_register_.naclidentity.md#private-encprivatekey)
 * [encPublicKey](_register_.naclidentity.md#encpublickey)
-* [privateKey](_register_.naclidentity.md#privatekey)
+* [privateKey](_register_.naclidentity.md#private-privatekey)
 * [publicKey](_register_.naclidentity.md#publickey)
+* [resolver](_register_.naclidentity.md#private-resolver)
 
 ### Methods
 
@@ -28,219 +31,222 @@ Encapsulates the functionality of an identity using the `nacl-did` method
 * [decrypt](_register_.naclidentity.md#decrypt)
 * [encrypt](_register_.naclidentity.md#encrypt)
 * [openSession](_register_.naclidentity.md#opensession)
+* [resolveEncryptionPublicKey](_register_.naclidentity.md#resolveencryptionpublickey)
 * [sign](_register_.naclidentity.md#sign)
 * [toJSON](_register_.naclidentity.md#tojson)
 * [verify](_register_.naclidentity.md#verify)
 
----
-
 ## Constructors
-
-<a id="constructor"></a>
 
 ###  constructor
 
-⊕ **new NaCLIdentity**(kp: *[NaCLKeyPair](../interfaces/_register_.naclkeypair.md)*): [NaCLIdentity](_register_.naclidentity.md)
+\+ **new NaCLIdentity**(`kp`: [NaCLKeyPair](../interfaces/_register_.naclkeypair.md), `didResolver?`: Resolver): *[NaCLIdentity](_register_.naclidentity.md)*
 
-*Defined in [register.ts:118](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L118)*
+*Defined in [register.ts:119](https://github.com/uport-project/nacl-did/blob/450728f/src/register.ts#L119)*
 
 Create a new NaCL Identity for a KeyPair
 
 **Parameters:**
 
-| Name | Type | Description |
-| ------ | ------ | ------ |
-| kp | [NaCLKeyPair](../interfaces/_register_.naclkeypair.md) |  a KeyPair generated prior from nacl.box.keyPair() |
+Name | Type | Description |
+------ | ------ | ------ |
+`kp` | [NaCLKeyPair](../interfaces/_register_.naclkeypair.md) | a KeyPair generated prior from nacl.box.keyPair()  |
+`didResolver?` | Resolver | - |
 
-**Returns:** [NaCLIdentity](_register_.naclidentity.md)
-
-___
+**Returns:** *[NaCLIdentity](_register_.naclidentity.md)*
 
 ## Properties
 
-<a id="did"></a>
-
 ###  did
 
-**● did**: *`string`*
+• **did**: *string*
 
-*Defined in [register.ts:114](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L114)*
-
-___
-<a id="encprivatekey"></a>
-
-### `<Private>` encPrivateKey
-
-**● encPrivateKey**: *`Uint8Array`*
-
-*Defined in [register.ts:118](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L118)*
+*Defined in [register.ts:114](https://github.com/uport-project/nacl-did/blob/450728f/src/register.ts#L114)*
 
 ___
-<a id="encpublickey"></a>
+
+### `Private` encPrivateKey
+
+• **encPrivateKey**: *Uint8Array*
+
+*Defined in [register.ts:118](https://github.com/uport-project/nacl-did/blob/450728f/src/register.ts#L118)*
+
+___
 
 ###  encPublicKey
 
-**● encPublicKey**: *`Uint8Array`*
+• **encPublicKey**: *Uint8Array*
 
-*Defined in [register.ts:116](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L116)*
-
-___
-<a id="privatekey"></a>
-
-### `<Private>` privateKey
-
-**● privateKey**: *`Uint8Array`*
-
-*Defined in [register.ts:117](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L117)*
+*Defined in [register.ts:116](https://github.com/uport-project/nacl-did/blob/450728f/src/register.ts#L116)*
 
 ___
-<a id="publickey"></a>
+
+### `Private` privateKey
+
+• **privateKey**: *Uint8Array*
+
+*Defined in [register.ts:117](https://github.com/uport-project/nacl-did/blob/450728f/src/register.ts#L117)*
+
+___
 
 ###  publicKey
 
-**● publicKey**: *`Uint8Array`*
+• **publicKey**: *Uint8Array*
 
-*Defined in [register.ts:115](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L115)*
+*Defined in [register.ts:115](https://github.com/uport-project/nacl-did/blob/450728f/src/register.ts#L115)*
 
 ___
 
-## Methods
+### `Private` resolver
 
-<a id="createjwt"></a>
+• **resolver**: *Resolver*
+
+*Defined in [register.ts:119](https://github.com/uport-project/nacl-did/blob/450728f/src/register.ts#L119)*
+
+## Methods
 
 ###  createJWT
 
-▸ **createJWT**(payload: *`Object`*): `string`
+▸ **createJWT**(`payload`: Object): *string*
 
-*Defined in [register.ts:165](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L165)*
+*Defined in [register.ts:166](https://github.com/uport-project/nacl-did/blob/450728f/src/register.ts#L166)*
 
 Creates a signed JWT using the following header `{ typ: 'JWT', alg: 'Ed25519' }`
 
 **Parameters:**
 
-| Name | Type | Description |
-| ------ | ------ | ------ |
-| payload | `Object` |  Any valid JSON encodeable JS object |
+Name | Type | Description |
+------ | ------ | ------ |
+`payload` | Object | Any valid JSON encodeable JS object  |
 
-**Returns:** `string`
+**Returns:** *string*
 
 ___
-<a id="decrypt"></a>
 
 ###  decrypt
 
-▸ **decrypt**(__namedParameters: *`object`*): `string`
+▸ **decrypt**(`__namedParameters`: object): *string*
 
-*Defined in [register.ts:231](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L231)*
+*Defined in [register.ts:244](https://github.com/uport-project/nacl-did/blob/450728f/src/register.ts#L244)*
 
 **Parameters:**
 
-**__namedParameters: `object`**
+▪ **__namedParameters**: *object*
 
-| Name | Type |
-| ------ | ------ |
-| ciphertext | `string` |
-| from | `undefined` | `string` |
-| nonce | `string` |
-| to | `string` |
-| version | `string` |
+Name | Type |
+------ | ------ |
+`ciphertext` | string |
+`from` | undefined \| string |
+`nonce` | string |
+`to` | string |
+`version` | string |
 
-**Returns:** `string`
+**Returns:** *string*
 
 ___
-<a id="encrypt"></a>
 
 ###  encrypt
 
-▸ **encrypt**(to: *`string`*, data: *`string` | `Uint8Array`*): `Promise`<[Encrypted](../interfaces/_register_.encrypted.md)>
+▸ **encrypt**(`to`: string, `data`: string | Uint8Array): *Promise‹[Encrypted](../interfaces/_register_.encrypted.md)›*
 
-*Defined in [register.ts:205](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L205)*
+*Defined in [register.ts:218](https://github.com/uport-project/nacl-did/blob/450728f/src/register.ts#L218)*
 
 Encrypt a single message to send to a recipient
 
 **Parameters:**
 
-| Name | Type | Description |
-| ------ | ------ | ------ |
-| to | `string` |  DID of recipient (uses symetric encryption if to is my own DID) |
-| data | `string` | `Uint8Array` |  Data to encrypt |
+Name | Type | Description |
+------ | ------ | ------ |
+`to` | string | DID of recipient (uses symetric encryption if to is my own DID) |
+`data` | string \| Uint8Array | Data to encrypt  |
 
-**Returns:** `Promise`<[Encrypted](../interfaces/_register_.encrypted.md)>
+**Returns:** *Promise‹[Encrypted](../interfaces/_register_.encrypted.md)›*
 
 ___
-<a id="opensession"></a>
 
 ###  openSession
 
-▸ **openSession**(to: *`string`*, overridePublicKey?: *`boolean` | `string`*): `Promise`<[EncryptedSession](_register_.encryptedsession.md)>
+▸ **openSession**(`to`: string, `overridePublicKey`: boolean | string): *Promise‹[EncryptedSession](_register_.encryptedsession.md)›*
 
-*Defined in [register.ts:185](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L185)*
+*Defined in [register.ts:198](https://github.com/uport-project/nacl-did/blob/450728f/src/register.ts#L198)*
 
 Opens an efficient session for encrypting and decrypting messages between this and another DID.
 
-An optional publicKey that has been exchanged out of band can be passed into the second parameter. This will ONLY be used if no encryption public key was found in DID document.
+An optional publicKey that has been exchanged out of band can be passed into the second parameter. This
+will ONLY be used if no encryption public key was found in DID document.
 
-If you would like to encrypt things to your self regardless if a public key was not found, pass in the value of `true` as the second argument. It will then be encrypted symetrically instead.
+If you would like to encrypt things to your self regardless if a public key was not found, pass in the value of `true` as the second argument.
+It will then be encrypted symetrically instead.
 
 **Parameters:**
 
-| Name | Type | Default value | Description |
-| ------ | ------ | ------ | ------ |
-| to | `string` | - |  DID of recipient |
-| `Default value` overridePublicKey | `boolean` | `string` | false |  If DID method does not contain an encryption public key use this key<br><br> |
+Name | Type | Default | Description |
+------ | ------ | ------ | ------ |
+`to` | string | - | DID of recipient |
+`overridePublicKey` | boolean \| string | false | If DID method does not contain an encryption public key use this key   |
 
-**Returns:** `Promise`<[EncryptedSession](_register_.encryptedsession.md)>
+**Returns:** *Promise‹[EncryptedSession](_register_.encryptedsession.md)›*
 
 ___
-<a id="sign"></a>
+
+###  resolveEncryptionPublicKey
+
+▸ **resolveEncryptionPublicKey**(`did`: string): *Promise‹Uint8Array | undefined›*
+
+*Defined in [register.ts:173](https://github.com/uport-project/nacl-did/blob/450728f/src/register.ts#L173)*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`did` | string |
+
+**Returns:** *Promise‹Uint8Array | undefined›*
+
+___
 
 ###  sign
 
-▸ **sign**(data: *`string` | `Uint8Array`*): [SignedData](../interfaces/_register_.signeddata.md)
+▸ **sign**(`data`: string | Uint8Array): *[SignedData](../interfaces/_register_.signeddata.md)*
 
-*Defined in [register.ts:145](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L145)*
+*Defined in [register.ts:146](https://github.com/uport-project/nacl-did/blob/450728f/src/register.ts#L146)*
 
 Signs data and returns the data, did and signature
 
 **Parameters:**
 
-| Name | Type | Description |
-| ------ | ------ | ------ |
-| data | `string` | `Uint8Array` |   |
+Name | Type | Description |
+------ | ------ | ------ |
+`data` | string \| Uint8Array |   |
 
-**Returns:** [SignedData](../interfaces/_register_.signeddata.md)
+**Returns:** *[SignedData](../interfaces/_register_.signeddata.md)*
 
 ___
-<a id="tojson"></a>
 
 ###  toJSON
 
-▸ **toJSON**(): [SerializableNaCLIdentity](../interfaces/_register_.serializablenaclidentity.md)
+▸ **toJSON**(): *[SerializableNaCLIdentity](../interfaces/_register_.serializablenaclidentity.md)*
 
-*Defined in [register.ts:137](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L137)*
+*Defined in [register.ts:138](https://github.com/uport-project/nacl-did/blob/450728f/src/register.ts#L138)*
 
 Serializes NaclDID to just it's base64 encoded private key and DID
 
-**Returns:** [SerializableNaCLIdentity](../interfaces/_register_.serializablenaclidentity.md)
+**Returns:** *[SerializableNaCLIdentity](../interfaces/_register_.serializablenaclidentity.md)*
 
 ___
-<a id="verify"></a>
 
 ###  verify
 
-▸ **verify**(signed: *[SignedData](../interfaces/_register_.signeddata.md)*): `boolean`
+▸ **verify**(`signed`: [SignedData](../interfaces/_register_.signeddata.md)): *boolean*
 
-*Defined in [register.ts:157](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L157)*
+*Defined in [register.ts:158](https://github.com/uport-project/nacl-did/blob/450728f/src/register.ts#L158)*
 
 Verifies that Signed Data was signed by this identity
 
 **Parameters:**
 
-| Name | Type | Description |
-| ------ | ------ | ------ |
-| signed | [SignedData](../interfaces/_register_.signeddata.md) |   |
+Name | Type | Description |
+------ | ------ | ------ |
+`signed` | [SignedData](../interfaces/_register_.signeddata.md) |   |
 
-**Returns:** `boolean`
-
-___
-
+**Returns:** *boolean*

@@ -1,10 +1,12 @@
-[nacl-did](../README.md) > ["register"](../modules/_register_.md) > [SerializableNaCLIdentity](../interfaces/_register_.serializablenaclidentity.md)
+**[nacl-did](../README.md)**
+
+[Globals](../globals.md) › ["register"](../modules/_register_.md) › [SerializableNaCLIdentity](_register_.serializablenaclidentity.md)
 
 # Interface: SerializableNaCLIdentity
 
 ## Hierarchy
 
-**SerializableNaCLIdentity**
+* **SerializableNaCLIdentity**
 
 ## Index
 
@@ -13,26 +15,18 @@
 * [did](_register_.serializablenaclidentity.md#did)
 * [privateKey](_register_.serializablenaclidentity.md#privatekey)
 
----
-
 ## Properties
-
-<a id="did"></a>
 
 ###  did
 
-**● did**: *`string`*
+• **did**: *string*
 
-*Defined in [register.ts:27](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L27)*
+*Defined in [register.ts:27](https://github.com/uport-project/nacl-did/blob/450728f/src/register.ts#L27)*
 
 ___
-<a id="privatekey"></a>
 
 ###  privateKey
 
-**● privateKey**: *`string`*
+• **privateKey**: *string*
 
-*Defined in [register.ts:28](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L28)*
-
-___
-
+*Defined in [register.ts:28](https://github.com/uport-project/nacl-did/blob/450728f/src/register.ts#L28)*

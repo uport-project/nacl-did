@@ -2,9 +2,8 @@
   "name": "nacl-did",
   "version": "0.4.0",
   "description": "Resolve and manage DIDs using NaCL crypto suites",
-  "main": "lib/register.js",
-  "module": "lib/register.es6.js",
-  "umd:main": "lib/register.umd.js",
+  "main": "lib/register.umd.js",
+  "module": "lib/register.modern.js",
   "types": "lib/register.d.ts",
   "source": "src/register.ts",
   "author": "Pelle Braendgaard <pelle.braendgaard@consensys.net>",
@@ -27,7 +26,7 @@
     "tweetnacl-util": "^0.15.0"
   },
   "scripts": {
-    "build:js": "./node_modules/.bin/microbundle",
+    "build:js": "./node_modules/.bin/microbundle -f modern,umd",
     "build": "npm run build:js && npm run test && npm run build:docs",
     "test": "./node_modules/.bin/jest --coverage",
     "test:watch": "./node_modules/.bin/jest --watch",
@@ -46,7 +45,7 @@
     "jest": "^24.9.0",
     "kitimat": "^0.1.8",
     "kitimat-jest": "^0.1.8",
-    "microbundle": "^0.11.0",
+    "microbundle": "^0.12.0-next.6",
     "mockdate": "^2.0.2",
     "prettier": "^1.18.2",
     "regenerator-runtime": "^0.13.3",
@@ -54,8 +53,8 @@
     "tslint": "^5.19.0",
     "tslint-config-prettier": "^1.18.0",
     "tslint-eslint-rules": "^5.4.0",
-    "typedoc": "^0.14.2",
-    "typedoc-plugin-markdown": "^1.1.22",
+    "typedoc": "^0.15.0",
+    "typedoc-plugin-markdown": "^2.1.7",
     "typescript": "^3.6.2"
   },
   "jest": {

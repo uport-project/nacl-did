@@ -1,14 +1,16 @@
-[nacl-did](../README.md) > ["register"](../modules/_register_.md) > [EncryptedSession](../classes/_register_.encryptedsession.md)
+**[nacl-did](../README.md)**
+
+[Globals](../globals.md) › ["register"](../modules/_register_.md) › [EncryptedSession](_register_.encryptedsession.md)
 
 # Class: EncryptedSession
 
 ## Hierarchy
 
-**EncryptedSession**
+* **EncryptedSession**
 
-↳  [AsymEncryptedSession](_register_.asymencryptedsession.md)
+  * [AsymEncryptedSession](_register_.asymencryptedsession.md)
 
-↳  [SymEncryptedSession](_register_.symencryptedsession.md)
+  * [SymEncryptedSession](_register_.symencryptedsession.md)
 
 ## Index
 
@@ -22,77 +24,61 @@
 
 ### Methods
 
-* [decrypt](_register_.encryptedsession.md#decrypt)
-* [encrypt](_register_.encryptedsession.md#encrypt)
-
----
+* [decrypt](_register_.encryptedsession.md#abstract-decrypt)
+* [encrypt](_register_.encryptedsession.md#abstract-encrypt)
 
 ## Constructors
 
-<a id="constructor"></a>
-
 ###  constructor
 
-⊕ **new EncryptedSession**(to: *`string`*): [EncryptedSession](_register_.encryptedsession.md)
+\+ **new EncryptedSession**(`to`: string): *[EncryptedSession](_register_.encryptedsession.md)*
 
-*Defined in [register.ts:248](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L248)*
+*Defined in [register.ts:261](https://github.com/uport-project/nacl-did/blob/450728f/src/register.ts#L261)*
 
 **Parameters:**
 
-| Name | Type |
-| ------ | ------ |
-| to | `string` |
+Name | Type |
+------ | ------ |
+`to` | string |
 
-**Returns:** [EncryptedSession](_register_.encryptedsession.md)
-
-___
+**Returns:** *[EncryptedSession](_register_.encryptedsession.md)*
 
 ## Properties
 
-<a id="to"></a>
-
 ###  to
 
-**● to**: *`string`*
+• **to**: *string*
 
-*Defined in [register.ts:248](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L248)*
-
-___
+*Defined in [register.ts:261](https://github.com/uport-project/nacl-did/blob/450728f/src/register.ts#L261)*
 
 ## Methods
 
-<a id="decrypt"></a>
+### `Abstract` decrypt
 
-### `<Abstract>` decrypt
+▸ **decrypt**(`encrypted`: [Encrypted](../interfaces/_register_.encrypted.md)): *string*
 
-▸ **decrypt**(encrypted: *[Encrypted](../interfaces/_register_.encrypted.md)*): `string`
-
-*Defined in [register.ts:253](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L253)*
+*Defined in [register.ts:266](https://github.com/uport-project/nacl-did/blob/450728f/src/register.ts#L266)*
 
 **Parameters:**
 
-| Name | Type |
-| ------ | ------ |
-| encrypted | [Encrypted](../interfaces/_register_.encrypted.md) |
+Name | Type |
+------ | ------ |
+`encrypted` | [Encrypted](../interfaces/_register_.encrypted.md) |
 
-**Returns:** `string`
+**Returns:** *string*
 
 ___
-<a id="encrypt"></a>
 
-### `<Abstract>` encrypt
+### `Abstract` encrypt
 
-▸ **encrypt**(data: *`string` | `Uint8Array`*): `Promise`<[Encrypted](../interfaces/_register_.encrypted.md)>
+▸ **encrypt**(`data`: string | Uint8Array): *Promise‹[Encrypted](../interfaces/_register_.encrypted.md)›*
 
-*Defined in [register.ts:252](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L252)*
+*Defined in [register.ts:265](https://github.com/uport-project/nacl-did/blob/450728f/src/register.ts#L265)*
 
 **Parameters:**
 
-| Name | Type |
-| ------ | ------ |
-| data | `string` | `Uint8Array` |
+Name | Type |
+------ | ------ |
+`data` | string \| Uint8Array |
 
-**Returns:** `Promise`<[Encrypted](../interfaces/_register_.encrypted.md)>
-
-___
-
+**Returns:** *Promise‹[Encrypted](../interfaces/_register_.encrypted.md)›*

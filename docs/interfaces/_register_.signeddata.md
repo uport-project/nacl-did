@@ -1,10 +1,12 @@
-[nacl-did](../README.md) > ["register"](../modules/_register_.md) > [SignedData](../interfaces/_register_.signeddata.md)
+**[nacl-did](../README.md)**
+
+[Globals](../globals.md) › ["register"](../modules/_register_.md) › [SignedData](_register_.signeddata.md)
 
 # Interface: SignedData
 
 ## Hierarchy
 
-**SignedData**
+* **SignedData**
 
 ## Index
 
@@ -14,35 +16,26 @@
 * [signature](_register_.signeddata.md#signature)
 * [signer](_register_.signeddata.md#signer)
 
----
-
 ## Properties
-
-<a id="data"></a>
 
 ###  data
 
-**● data**: *`string` | `Uint8Array`*
+• **data**: *string | Uint8Array*
 
-*Defined in [register.ts:33](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L33)*
+*Defined in [register.ts:33](https://github.com/uport-project/nacl-did/blob/450728f/src/register.ts#L33)*
 
 ___
-<a id="signature"></a>
 
 ###  signature
 
-**● signature**: *`Uint8Array`*
+• **signature**: *Uint8Array*
 
-*Defined in [register.ts:34](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L34)*
+*Defined in [register.ts:34](https://github.com/uport-project/nacl-did/blob/450728f/src/register.ts#L34)*
 
 ___
-<a id="signer"></a>
 
 ###  signer
 
-**● signer**: *`string`*
+• **signer**: *string*
 
-*Defined in [register.ts:32](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L32)*
-
-___
-
+*Defined in [register.ts:32](https://github.com/uport-project/nacl-did/blob/450728f/src/register.ts#L32)*

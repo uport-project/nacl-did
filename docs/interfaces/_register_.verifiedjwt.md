@@ -1,10 +1,12 @@
-[nacl-did](../README.md) > ["register"](../modules/_register_.md) > [VerifiedJWT](../interfaces/_register_.verifiedjwt.md)
+**[nacl-did](../README.md)**
+
+[Globals](../globals.md) › ["register"](../modules/_register_.md) › [VerifiedJWT](_register_.verifiedjwt.md)
 
 # Interface: VerifiedJWT
 
 ## Hierarchy
 
-**VerifiedJWT**
+* **VerifiedJWT**
 
 ## Index
 
@@ -13,26 +15,18 @@
 * [issuer](_register_.verifiedjwt.md#issuer)
 * [payload](_register_.verifiedjwt.md#payload)
 
----
-
 ## Properties
-
-<a id="issuer"></a>
 
 ###  issuer
 
-**● issuer**: *`string`*
+• **issuer**: *string*
 
-*Defined in [register.ts:43](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L43)*
+*Defined in [register.ts:43](https://github.com/uport-project/nacl-did/blob/450728f/src/register.ts#L43)*
 
 ___
-<a id="payload"></a>
 
 ###  payload
 
-**● payload**: *`any`*
+• **payload**: *any*
 
-*Defined in [register.ts:44](https://github.com/uport-project/nacl-did/blob/16f44b5/src/register.ts#L44)*
-
-___
-
+*Defined in [register.ts:44](https://github.com/uport-project/nacl-did/blob/450728f/src/register.ts#L44)*

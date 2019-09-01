@@ -1,40 +1,43 @@
+**[nacl-did](README.md)**
 
-* * *
+[Globals](globals.md)
 
-title: "NaCL DID Resolver and Manager" index: 0 category: "nacl-did" type: "reference"
+---
+title: "NaCL DID Resolver and Manager"
+index: 0
+category: "nacl-did"
+type: "reference"
+source: "https://github.com/uport-project/nacl-did/blob/develop/README.md"
+---
 
-source: "[https://github.com/uport-project/nacl-did/blob/develop/README.md"](https://github.com/uport-project/nacl-did/blob/develop/README.md")
------------------------------------------------------------------------------------------------------------------------------------------------
+# NaCL DID Resolver and Manager
 
-NaCL DID Resolver and Manager
-=============================
-
-[![CircleCI](https://circleci.com/gh/uport-project/nacl-did.svg?style=svg)](https://circleci.com/gh/uport-project/nacl-did) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/8ce0d076d47147deb76bc7bb43df9216)](https://app.codacy.com/app/pelle/nacl-did?utm_source=github.com&utm_medium=referral&utm_content=uport-project/nacl-did&utm_campaign=Badge_Grade_Dashboard)
+[![CircleCI](https://circleci.com/gh/uport-project/nacl-did.svg?style=svg)](https://circleci.com/gh/uport-project/nacl-did)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/8ce0d076d47147deb76bc7bb43df9216)](https://app.codacy.com/app/pelle/nacl-did?utm_source=github.com&utm_medium=referral&utm_content=uport-project/nacl-did&utm_campaign=Badge_Grade_Dashboard)
 
 This library is intended to use cryptographic keys from [NaCL](http://nacl.cr.yp.to) cryptographic suite as [Decentralized Identifiers](https://w3c-ccg.github.io/did-spec/#decentralized-identifiers-dids) and generate an associated [DID Document](https://w3c-ccg.github.io/did-spec/#did-documents).
 
 Motivation. There is a need for non updateable DID's for use in IOT and other applications, where lack of network, size of code base and other such concerns are paramount to adoption. These concerns need to be addressed while not lowering the overall security guarantees.
 
-_WARNING_ This should not be used for representing long term primary identities of end users. But should be seen as a useful building block for building Identity Applications together with other more complete DID methods.
+*WARNING* This should not be used for representing long term primary identities of end users. But should be seen as a useful building block for building Identity Applications together with other more complete DID methods.
 
 What NaCL DID does:
 
-*   Provides a single `Ed25519` Signing Public Key for a DID
-*   Provide a single `Curve25519` Encryption Public Key for a DID
-*   Small DID size
+* Provides a single `Ed25519` Signing Public Key for a DID
+* Provide a single `Curve25519` Encryption Public Key for a DID
+* Small DID size
 
 What it can not do:
 
-*   It can NOT rotate keys
-*   It can NOT add keys
-*   It can NOT contain service end points
+* It can NOT rotate keys
+* It can NOT add keys
+* It can NOT contain service end points
 
 It supports the proposed [Decentralized Identifiers](https://w3c-ccg.github.io/did-spec/) spec from the [W3C Credentials Community Group](https://w3c-ccg.github.io).
 
 It requires the `did-resolver` library, which is the primary interface for resolving DIDs.
 
-DID method
-----------
+## DID method
 
 The base identifier is a Base64 encoded Ed25519 public key.
 
@@ -42,8 +45,7 @@ To encode a DID for an HTTPS domain, simply prepend `did:nacl:` to the public ke
 
 eg: `PfFss0oSFiwSdJuZXO6EfGK2T37Bz5gPy+Dy8Hv+Izg= -> did:nacl:PfFss0oSFiwSdJuZXO6EfGK2T37Bz5gPy+Dy8Hv+Izg=`
 
-DID Document
-------------
+## DID Document
 
 The DID resolver generates a DID Document on the fly by adding signing public key from the DID and adds it to the `publicKey` and `authentication` arrays.
 
@@ -73,8 +75,7 @@ A DID Document for the `did:nacl:Md8JiMIwsapml/FtQ2ngnGftNP5UmVCAUuhnLyAsPxI=` w
 }
 ```
 
-Creating an Identity
---------------------
+## Creating an Identity
 
 The resolver presents a `createIdentity()` function that returns a ES6 Promise returning a Identity object containing a keyPair and DID.
 
@@ -92,8 +93,7 @@ const identity = loadIdentity(JSON.parse(localStorage.getItem('naclId')))
 
 ```
 
-Signing Data
-------------
+## Signing Data
 
 The `sign()` method can be used to sign raw data.
 
@@ -116,8 +116,7 @@ if (verifySignature(signedData)) {
 
 ```
 
-Signing JWT
------------
+## Signing JWT
 
 The `createJWT()` method can be used as a minimal JWT implementation.
 
@@ -134,10 +133,9 @@ const {payload, did } = await verifyJWT(vc)
 
 The built in JWT implementation only signs and verifies JWT's using the NaCL DID method. We recommend using [DID-JWT](https://github.com/uport-project/did-jwt) for a more complete solution.
 
-Encryption
-----------
+## Encryption
 
-The NaCL DID method supports public key encryption using NaCL's `x25519-xsalsa20-poly1305` (`box`) algorithm. If the `to` field is my own DID it uses NaCL's symmetric encryption `xsalsa20-poly1305` (`secret-box`) algorithm instead.
+The NaCL DID method supports public key encryption using NaCL's `x25519-xsalsa20-poly1305` (`box`) algorithm. If the `to` field is my own DID it uses  NaCL's symmetric encryption `xsalsa20-poly1305` (`secret-box`) algorithm instead.
 
 Use the `encrypt(to, data)` and `decrypt(encrypted)` methods.
 
@@ -150,8 +148,7 @@ const clear = identity.decrypt(encrypted)
 
 ```
 
-Encryption Sessions
--------------------
+## Encryption Sessions
 
 In many applications you will be encrypting data repeatedly to the same recipient. For these it is more eficient to open an Encryption Session.
 
@@ -188,28 +185,17 @@ const encrypted = await session.encrypt('hello')
 const clear = session.decrypt(encrypted)
 ```
 
-Resolving a DID document
-------------------------
+## Resolving a DID document
 
 The resolver presents a simple `resolver()` function that returns a ES6 Promise returning the DID document.
 
 ```javascript
-import resolve from 'did-resolver'
-import { registerNaclDID } from 'nacl-did'
+import { Resolver } from 'did-resolver'
+import { resolver as naclDidResolver } from 'nacl-did'
 
-registerNaclDID()
-
-resolve('did:nacl:Md8JiMIwsapml/FtQ2ngnGftNP5UmVCAUuhnLyAsPxI=').then(doc => console.log)
+const didResolver = new Resolver({ nacl: naclDidResolver })
+didResolver.resolve('did:nacl:Md8JiMIwsapml/FtQ2ngnGftNP5UmVCAUuhnLyAsPxI=').then(doc => console.log)
 
 // You can also use ES7 async/await syntax
-const doc = await resolve('did:nacl:Md8JiMIwsapml/FtQ2ngnGftNP5UmVCAUuhnLyAsPxI=')
+const doc = await didResolver.resolve('did:nacl:Md8JiMIwsapml/FtQ2ngnGftNP5UmVCAUuhnLyAsPxI=')
 ```
-
-## Index
-
-### External modules
-
-* ["register"](modules/_register_.md)
-
----
-
