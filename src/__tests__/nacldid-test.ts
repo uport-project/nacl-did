@@ -1,5 +1,22 @@
-import { check, Fuzzer, string, posInteger, object, asciiString } from 'kitimat-jest'
-import { resolver, createIdentity, loadIdentity, verifySignature, verifyJWT, encodeBase64Url, decodeBase64Url, EncryptedSession, Encrypted } from '../nacldid'
+import {
+  check,
+  Fuzzer,
+  string,
+  posInteger,
+  object,
+  asciiString
+} from 'kitimat-jest'
+import {
+  resolver,
+  createIdentity,
+  loadIdentity,
+  verifySignature,
+  verifyJWT,
+  encodeBase64Url,
+  decodeBase64Url,
+  EncryptedSession,
+  Encrypted
+} from '../nacldid'
 import { Resolver, DIDDocument, ParsedDID } from 'did-resolver'
 import naclutil from 'tweetnacl-util'
 import nacl from 'tweetnacl'
@@ -16,44 +33,55 @@ async function fakeEthrDidResolver(
   return {
     '@context': 'https://w3id.org/did/v1',
     id: did,
-    publicKey: [{
-      id: `${did}#key1`,
-      type: 'Secp256k1VerificationKey2018',
-      owner: did,
-      ethereumAddress: parsed.id
-    }],
-    authentication: [{
-      type: 'Secp256k1SignatureAuthentication2018',
-      publicKey: `${did}#key1`
-    }]
+    publicKey: [
+      {
+        id: `${did}#key1`,
+        type: 'Secp256k1VerificationKey2018',
+        owner: did,
+        ethereumAddress: parsed.id
+      }
+    ],
+    authentication: [
+      {
+        type: 'Secp256k1SignatureAuthentication2018',
+        publicKey: `${did}#key1`
+      }
+    ]
   }
 }
 
 const didResolver = new Resolver({ nacl: resolver, ethr: fakeEthrDidResolver })
 
 const clearTexts: Fuzzer<string> = string()
-const byteArrays: Fuzzer<Uint8Array> = posInteger({ maxSize: 10000 }).map(i => nacl.randomBytes(i))
+const byteArrays: Fuzzer<Uint8Array> = posInteger({ maxSize: 10000 }).map(i =>
+  nacl.randomBytes(i)
+)
 
 describe('nacl did resolver', () => {
   const did: string = 'did:nacl:Md8JiMIwsapml_FtQ2ngnGftNP5UmVCAUuhnLyAsPxI'
   const validDidDoc = {
     '@context': 'https://w3id.org/did/v1',
     id: did,
-    publicKey: [{
-      id: `did:nacl:Md8JiMIwsapml_FtQ2ngnGftNP5UmVCAUuhnLyAsPxI#key1`,
-      type: 'ED25519SignatureVerification',
-      owner: did,
-      publicKeyBase64: 'Md8JiMIwsapml/FtQ2ngnGftNP5UmVCAUuhnLyAsPxI='
-    }, {
-      id: `did:nacl:Md8JiMIwsapml_FtQ2ngnGftNP5UmVCAUuhnLyAsPxI#key2`,
-      type: 'Curve25519EncryptionPublicKey',
-      owner: did,
-      publicKeyBase64: 'OAsnUyuUBISGsOherdxO6rgzUeGe9SnffDXQk6KpkAY='
-    }],
-    authentication: [{
-      type: 'ED25519SigningAuthentication',
-      publicKey: `did:nacl:Md8JiMIwsapml_FtQ2ngnGftNP5UmVCAUuhnLyAsPxI#key1`
-    }]
+    publicKey: [
+      {
+        id: `did:nacl:Md8JiMIwsapml_FtQ2ngnGftNP5UmVCAUuhnLyAsPxI#key1`,
+        type: 'ED25519SignatureVerification',
+        owner: did,
+        publicKeyBase64: 'Md8JiMIwsapml/FtQ2ngnGftNP5UmVCAUuhnLyAsPxI='
+      },
+      {
+        id: `did:nacl:Md8JiMIwsapml_FtQ2ngnGftNP5UmVCAUuhnLyAsPxI#key2`,
+        type: 'Curve25519EncryptionPublicKey',
+        owner: did,
+        publicKeyBase64: 'OAsnUyuUBISGsOherdxO6rgzUeGe9SnffDXQk6KpkAY='
+      }
+    ],
+    authentication: [
+      {
+        type: 'ED25519SigningAuthentication',
+        publicKey: `did:nacl:Md8JiMIwsapml_FtQ2ngnGftNP5UmVCAUuhnLyAsPxI#key1`
+      }
+    ]
   }
 
   it('resolves document', () => {
@@ -129,7 +157,9 @@ describe('createIdentity()', () => {
         sub: string().maybe(),
         aud: string().maybe(),
         iat: posInteger().maybe(),
-        exp: posInteger().map(exp => exp + NOW + 1).maybe(),
+        exp: posInteger()
+          .map(exp => exp + NOW + 1)
+          .maybe(),
         claims: object<NameClaim>({
           name: asciiString()
         }).maybe()
@@ -150,7 +180,9 @@ describe('createIdentity()', () => {
       check('handles expiration', [expiredPayloads], payload => {
         const jwt = id.createJWT(payload)
         expect(jwt).toBeDefined()
-        expect(() => verifyJWT(jwt)).toThrowError(`JWT expired on: ${payload.exp}`)
+        expect(() => verifyJWT(jwt)).toThrowError(
+          `JWT expired on: ${payload.exp}`
+        )
       })
     })
   })
@@ -160,7 +192,9 @@ describe('createIdentity()', () => {
       const alice = createIdentity()
       const clearText = 'Super Secret'
       let encrypted: Encrypted
-      beforeAll(async () => encrypted = await id.encrypt(alice.did, clearText))
+      beforeAll(
+        async () => (encrypted = await id.encrypt(alice.did, clearText))
+      )
 
       it('should contain the to', () => {
         expect(encrypted.to).toEqual(alice.did)
@@ -201,7 +235,7 @@ describe('createIdentity()', () => {
     describe('to myself', () => {
       const clearText = 'Super Secret'
       let encrypted: Encrypted
-      beforeAll(async () => encrypted = await id.encrypt(id.did, clearText))
+      beforeAll(async () => (encrypted = await id.encrypt(id.did, clearText)))
 
       it('should contain the to', () => {
         expect(encrypted.to).toEqual(id.did)
@@ -250,16 +284,20 @@ describe('createIdentity()', () => {
       })
 
       describe('encrypt', () => {
-        check('encrypts any string correctly', [clearTexts], async clearText => {
-          const encrypted = await session.encrypt(clearText)
-          expect(encrypted.from).toEqual(id.did)
-          expect(encrypted.to).toEqual(alice.did)
-          expect(encrypted.toPublicKey).toEqual(alicePublicKey)
-          expect(encrypted.version).toEqual('x25519-xsalsa20-poly1305')
-          expect(session.decrypt(encrypted)).toEqual(clearText)
-          expect(id.decrypt(encrypted)).toEqual(clearText)
-          expect(alice.decrypt(encrypted)).toEqual(clearText)
-        })
+        check(
+          'encrypts any string correctly',
+          [clearTexts],
+          async clearText => {
+            const encrypted = await session.encrypt(clearText)
+            expect(encrypted.from).toEqual(id.did)
+            expect(encrypted.to).toEqual(alice.did)
+            expect(encrypted.toPublicKey).toEqual(alicePublicKey)
+            expect(encrypted.version).toEqual('x25519-xsalsa20-poly1305')
+            expect(session.decrypt(encrypted)).toEqual(clearText)
+            expect(id.decrypt(encrypted)).toEqual(clearText)
+            expect(alice.decrypt(encrypted)).toEqual(clearText)
+          }
+        )
       })
 
       describe('Recipient is myself', () => {
@@ -272,18 +310,21 @@ describe('createIdentity()', () => {
         })
 
         describe('encrypt', () => {
-          check('encrypts any string correctly', [clearTexts], async clearText => {
-            const encrypted = await session.encrypt(clearText)
-            expect(encrypted.from).toBeUndefined()
-            expect(encrypted.toPublicKey).toBeUndefined()
-            expect(encrypted.to).toEqual(id.did)
-            expect(encrypted.version).toEqual('xsalsa20-poly1305')
-            expect(session.decrypt(encrypted)).toEqual(clearText)
-            expect(id.decrypt(encrypted)).toEqual(clearText)
-          })
+          check(
+            'encrypts any string correctly',
+            [clearTexts],
+            async clearText => {
+              const encrypted = await session.encrypt(clearText)
+              expect(encrypted.from).toBeUndefined()
+              expect(encrypted.toPublicKey).toBeUndefined()
+              expect(encrypted.to).toEqual(id.did)
+              expect(encrypted.version).toEqual('xsalsa20-poly1305')
+              expect(session.decrypt(encrypted)).toEqual(clearText)
+              expect(id.decrypt(encrypted)).toEqual(clearText)
+            }
+          )
         })
       })
-
     })
     describe('non nacl did', () => {
       describe('recipient does not have EncPublicKey', () => {
@@ -295,7 +336,9 @@ describe('createIdentity()', () => {
               const session = await id.openSession(ethr)
               return expect(session).toBeUndefined()
             } catch (error) {
-              return expect(error.message).toEqual('Recipient DID did:ethr:0x2Cc31912B2b0f3075A87b3640923D45A26cef3Ee does not have a valid encryption publicKey')
+              return expect(error.message).toEqual(
+                'Recipient DID did:ethr:0x2Cc31912B2b0f3075A87b3640923D45A26cef3Ee does not have a valid encryption publicKey'
+              )
             }
           })
 
@@ -305,7 +348,9 @@ describe('createIdentity()', () => {
                 const session = await id.openSession(fail)
                 return expect(session).toBeUndefined()
               } catch (error) {
-                return expect(error.message).toEqual('Recipient DID did:fail:hello does not have a valid encryption publicKey')
+                return expect(error.message).toEqual(
+                  'Recipient DID did:fail:hello does not have a valid encryption publicKey'
+                )
               }
             })
           })
@@ -322,15 +367,19 @@ describe('createIdentity()', () => {
             })
 
             describe('encrypt', () => {
-              check('encrypts any string correctly', [clearTexts], async clearText => {
-                const encrypted = await session.encrypt(clearText)
-                expect(encrypted.from).toBeUndefined()
-                expect(encrypted.toPublicKey).toBeUndefined()
-                expect(encrypted.to).toEqual(id.did)
-                expect(encrypted.version).toEqual('xsalsa20-poly1305')
-                expect(session.decrypt(encrypted)).toEqual(clearText)
-                expect(id.decrypt(encrypted)).toEqual(clearText)
-              })
+              check(
+                'encrypts any string correctly',
+                [clearTexts],
+                async clearText => {
+                  const encrypted = await session.encrypt(clearText)
+                  expect(encrypted.from).toBeUndefined()
+                  expect(encrypted.toPublicKey).toBeUndefined()
+                  expect(encrypted.to).toEqual(id.did)
+                  expect(encrypted.version).toEqual('xsalsa20-poly1305')
+                  expect(session.decrypt(encrypted)).toEqual(clearText)
+                  expect(id.decrypt(encrypted)).toEqual(clearText)
+                }
+              )
             })
           })
 
@@ -355,15 +404,24 @@ describe('createIdentity()', () => {
           })
 
           describe('encryption', () => {
-            check('encrypts any string correctly', [clearTexts], async clearText => {
-              const encrypted = await session.encrypt(clearText)
-              expect(naclutil.encodeUTF8(<Uint8Array>nacl.box.open(
-                naclutil.decodeBase64(encrypted.ciphertext),
-                naclutil.decodeBase64(encrypted.nonce),
-                id.encPublicKey,
-                encKP.secretKey))).toEqual(clearText)
-              expect(encrypted.toPublicKey).toEqual(encPublicKey)
-            })
+            check(
+              'encrypts any string correctly',
+              [clearTexts],
+              async clearText => {
+                const encrypted = await session.encrypt(clearText)
+                expect(
+                  naclutil.encodeUTF8(<Uint8Array>(
+                    nacl.box.open(
+                      naclutil.decodeBase64(encrypted.ciphertext),
+                      naclutil.decodeBase64(encrypted.nonce),
+                      id.encPublicKey,
+                      encKP.secretKey
+                    )
+                  ))
+                ).toEqual(clearText)
+                expect(encrypted.toPublicKey).toEqual(encPublicKey)
+              }
+            )
           })
         })
       })
@@ -374,20 +432,32 @@ describe('createIdentity()', () => {
 describe('base64url', () => {
   describe('encodeBase64Url()', () => {
     it('encodes correctly', () => {
-      expect(encodeBase64Url(naclutil.decodeBase64('Md8JiMIwsapml/FtQ2ngnGftNP5UmVCAUuhnLyAsPxI='))).toEqual('Md8JiMIwsapml_FtQ2ngnGftNP5UmVCAUuhnLyAsPxI')
+      expect(
+        encodeBase64Url(
+          naclutil.decodeBase64('Md8JiMIwsapml/FtQ2ngnGftNP5UmVCAUuhnLyAsPxI=')
+        )
+      ).toEqual('Md8JiMIwsapml_FtQ2ngnGftNP5UmVCAUuhnLyAsPxI')
     })
   })
 
   describe('decodeBase64Url()', () => {
     it('decodes correctly', () => {
-      expect(naclutil.encodeBase64(decodeBase64Url('Md8JiMIwsapml_FtQ2ngnGftNP5UmVCAUuhnLyAsPxI'))).toEqual('Md8JiMIwsapml/FtQ2ngnGftNP5UmVCAUuhnLyAsPxI=')
+      expect(
+        naclutil.encodeBase64(
+          decodeBase64Url('Md8JiMIwsapml_FtQ2ngnGftNP5UmVCAUuhnLyAsPxI')
+        )
+      ).toEqual('Md8JiMIwsapml/FtQ2ngnGftNP5UmVCAUuhnLyAsPxI=')
     })
   })
 
   describe('random test', () => {
-    check(`should encode and decode correctly at different sizes`, [byteArrays], data => {
-      const encoded = encodeBase64Url(data)
-      expect(decodeBase64Url(encoded)).toEqual(data)
-    })
+    check(
+      `should encode and decode correctly at different sizes`,
+      [byteArrays],
+      data => {
+        const encoded = encodeBase64Url(data)
+        expect(decodeBase64Url(encoded)).toEqual(data)
+      }
+    )
   })
 })

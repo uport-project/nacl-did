@@ -32,7 +32,7 @@
     "test:watch": "./node_modules/.bin/jest --watch",
     "test:ci": "./node_modules/.bin/jest -u --coverage && cat ./coverage/lcov.info | ./node_modules/.bin/codacy-coverage -v",
     "dev": "./node_modules/.bin/microbundle --watch",
-    "format": "prettier",
+    "format": "./node_modules/.bin/prettier --write src/**/*",
     "build:docs": "./node_modules/.bin/typedoc --theme markdown --out docs/ src/nacldid.ts ./index.d.ts",
     "prepare": "npm run build"
   },
