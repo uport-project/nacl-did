@@ -1,4 +1,4 @@
-import resolve, { registerMethod, DIDDocument, ParsedDID, parse } from 'did-resolver'
+import { Resolver, DIDDocument, ParsedDID, parse } from 'did-resolver'
 import nacl from 'tweetnacl'
 import naclutil from 'tweetnacl-util'
 import { convertKeyPair, convertPublicKey } from 'ed2curve'
@@ -116,19 +116,20 @@ export class NaCLIdentity {
   readonly encPublicKey: Uint8Array
   private readonly privateKey: Uint8Array
   private readonly encPrivateKey: Uint8Array
-
+  private readonly resolver: Resolver
   /**
    * Create a new NaCL Identity for a KeyPair
    * 
    * @param kp a KeyPair generated prior from nacl.box.keyPair()
    */
-  constructor(kp: NaCLKeyPair) {
+  constructor(kp: NaCLKeyPair, didResolver?: Resolver) {
     this.did = `did:nacl:${encodeBase64Url(kp.publicKey)}`
     this.privateKey = kp.secretKey
     this.publicKey = kp.publicKey
     const encKP = convertKeyPair(kp)
     this.encPublicKey = encKP.publicKey
     this.encPrivateKey = encKP.secretKey
+    this.resolver = didResolver || new Resolver({ nacl: resolver })
   }
 
   /**
@@ -169,6 +170,18 @@ export class NaCLIdentity {
     return unsigned + '.' + encodeBase64Url(signed.signature)
   }
 
+  async resolveEncryptionPublicKey(did: string): Promise<Uint8Array | undefined> {
+    try {
+      const doc = await this.resolver.resolve(did)
+      if (doc) {
+        const publicKey = doc.publicKey.find(pub => pub.type === 'Curve25519EncryptionPublicKey')
+        if (publicKey && publicKey.publicKeyBase64) return naclutil.decodeBase64(publicKey.publicKeyBase64)
+      }
+    } catch (error) {
+      // console.log(error.message)
+    }
+  }
+
   /**
    * Opens an efficient session for encrypting and decrypting messages between this and another DID.
    * 
@@ -184,7 +197,7 @@ export class NaCLIdentity {
    */
   async openSession(to: string, overridePublicKey: boolean | string = false): Promise<EncryptedSession> {
     if (to === this.did) return new SymEncryptedSession(this)
-    let publicKey = await resolveEncryptionPublicKey(to)
+    let publicKey = await this.resolveEncryptionPublicKey(to)
     if (!publicKey) {
       if (typeof overridePublicKey === 'string') {
         publicKey = naclutil.decodeBase64(overridePublicKey)
@@ -355,18 +368,6 @@ function didToSignPubKey(did: string) {
   return decodeBase64Url(parsed.id)
 }
 
-async function resolveEncryptionPublicKey(did: string): Promise<Uint8Array | undefined> {
-  try {
-    const doc = await resolve(did)
-    if (doc) {
-      const publicKey = doc.publicKey.find(pub => pub.type === 'Curve25519EncryptionPublicKey')
-      if (publicKey && publicKey.publicKeyBase64) return naclutil.decodeBase64(publicKey.publicKeyBase64)
-    }
-  } catch (error) {
-    // console.log(error.message)
-  }
-}
-
 export function didToEncPubKey(did: string): Uint8Array {
   if (!did.match(/^did:nacl:/)) throw new Error('Only nacl dids are supported')
   return convertPublicKey(didToSignPubKey(did))
@@ -375,8 +376,8 @@ export function didToEncPubKey(did: string): Uint8Array {
 /**
  * Create a new NaCLIDentity
  */
-export function createIdentity(): NaCLIdentity {
-  return new NaCLIdentity(nacl.sign.keyPair())
+export function createIdentity(didResolver?: Resolver): NaCLIdentity {
+  return new NaCLIdentity(nacl.sign.keyPair(), didResolver)
 }
 
 /**
@@ -392,31 +393,28 @@ export function loadIdentity(sId: SerializableNaCLIdentity): NaCLIdentity {
 /**
  * Registers `nacl` DID resolver
  */
-export function registerNaclDID() {
-  async function naclDIDResolve(
-    did: string,
-    parsed: ParsedDID,
-  ): Promise<DIDDocument | null> {
-    const publicKey = decodeBase64Url(parsed.id)
-    return {
-      '@context': 'https://w3id.org/did/v1',
-      id: did,
-      publicKey: [{
-        id: `${did}#key1`,
-        type: 'ED25519SignatureVerification',
-        owner: did,
-        publicKeyBase64: naclutil.encodeBase64(publicKey)
-      }, {
-        id: `${did}#key2`,
-        type: 'Curve25519EncryptionPublicKey',
-        owner: did,
-        publicKeyBase64: naclutil.encodeBase64(convertPublicKey(publicKey))
-      }],
-      authentication: [{
-        type: 'ED25519SigningAuthentication',
-        publicKey: `${did}#key1`
-      }]
-    }
+export async function resolver(
+  did: string,
+  parsed: ParsedDID,
+): Promise<DIDDocument | null> {
+  const publicKey = decodeBase64Url(parsed.id)
+  return {
+    '@context': 'https://w3id.org/did/v1',
+    id: did,
+    publicKey: [{
+      id: `${did}#key1`,
+      type: 'ED25519SignatureVerification',
+      owner: did,
+      publicKeyBase64: naclutil.encodeBase64(publicKey)
+    }, {
+      id: `${did}#key2`,
+      type: 'Curve25519EncryptionPublicKey',
+      owner: did,
+      publicKeyBase64: naclutil.encodeBase64(convertPublicKey(publicKey))
+    }],
+    authentication: [{
+      type: 'ED25519SigningAuthentication',
+      publicKey: `${did}#key1`
+    }]
   }
-  registerMethod('nacl', naclDIDResolve)
 }

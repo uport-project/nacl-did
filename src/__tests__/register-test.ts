@@ -1,6 +1,6 @@
 import { check, Fuzzer, string, posInteger, object, asciiString } from 'kitimat-jest'
-import { registerNaclDID, createIdentity, loadIdentity, verifySignature, verifyJWT, encodeBase64Url, decodeBase64Url, EncryptedSession, Encrypted } from '../register'
-import resolve, { registerMethod, DIDDocument, ParsedDID } from 'did-resolver'
+import { resolver, createIdentity, loadIdentity, verifySignature, verifyJWT, encodeBase64Url, decodeBase64Url, EncryptedSession, Encrypted } from '../register'
+import { Resolver, DIDDocument, ParsedDID } from 'did-resolver'
 import naclutil from 'tweetnacl-util'
 import nacl from 'tweetnacl'
 
@@ -8,7 +8,28 @@ import MockDate from 'mockdate'
 
 const NOW = 1485321133
 MockDate.set(NOW * 1000)
-registerNaclDID()
+
+async function fakeEthrDidResolver(
+  did: string,
+  parsed: ParsedDID
+): Promise<DIDDocument | null> {
+  return {
+    '@context': 'https://w3id.org/did/v1',
+    id: did,
+    publicKey: [{
+      id: `${did}#key1`,
+      type: 'Secp256k1VerificationKey2018',
+      owner: did,
+      ethereumAddress: parsed.id
+    }],
+    authentication: [{
+      type: 'Secp256k1SignatureAuthentication2018',
+      publicKey: `${did}#key1`
+    }]
+  }
+}
+
+const didResolver = new Resolver({ nacl: resolver, ethr: fakeEthrDidResolver })
 
 const clearTexts: Fuzzer<string> = string()
 const byteArrays: Fuzzer<Uint8Array> = posInteger({ maxSize: 10000 }).map(i => nacl.randomBytes(i))
@@ -36,12 +57,12 @@ describe('nacl did resolver', () => {
   }
 
   it('resolves document', () => {
-    return expect(resolve(did)).resolves.toEqual(validDidDoc)
+    return expect(didResolver.resolve(did)).resolves.toEqual(validDidDoc)
   })
 })
 
 describe('createIdentity()', () => {
-  const id = createIdentity()
+  const id = createIdentity(didResolver)
 
   it('should have a did', () => {
     expect(id.did).toMatch(/^did:nacl:[a-zA-Z0-9-_]+$/)
@@ -134,7 +155,7 @@ describe('createIdentity()', () => {
     })
   })
 
-  describe('encrypt()', async () => {
+  describe('encrypt()', () => {
     describe('with counterparty', () => {
       const alice = createIdentity()
       const clearText = 'Super Secret'
@@ -268,31 +289,6 @@ describe('createIdentity()', () => {
       describe('recipient does not have EncPublicKey', () => {
         const ethr = 'did:ethr:0x2Cc31912B2b0f3075A87b3640923D45A26cef3Ee'
         const fail = 'did:fail:hello'
-
-        beforeAll(() => {
-          async function fakeEthrDidResolver(
-            did: string,
-            parsed: ParsedDID
-          ): Promise<DIDDocument | null> {
-            return {
-              '@context': 'https://w3id.org/did/v1',
-              id: did,
-              publicKey: [{
-                id: `${did}#key1`,
-                type: 'Secp256k1VerificationKey2018',
-                owner: did,
-                ethereumAddress: parsed.id
-              }],
-              authentication: [{
-                type: 'Secp256k1SignatureAuthentication2018',
-                publicKey: `${did}#key1`
-              }]
-            }
-          }
-          registerMethod('ethr', fakeEthrDidResolver)
-        }
-        )
-
         describe('default behavior', () => {
           it('should throw an exception', async () => {
             try {
