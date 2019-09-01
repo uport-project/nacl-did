@@ -1,5 +1,5 @@
 import { check, Fuzzer, string, posInteger, object, asciiString } from 'kitimat-jest'
-import { resolver, createIdentity, loadIdentity, verifySignature, verifyJWT, encodeBase64Url, decodeBase64Url, EncryptedSession, Encrypted } from '../register'
+import { resolver, createIdentity, loadIdentity, verifySignature, verifyJWT, encodeBase64Url, decodeBase64Url, EncryptedSession, Encrypted } from '../nacldid'
 import { Resolver, DIDDocument, ParsedDID } from 'did-resolver'
 import naclutil from 'tweetnacl-util'
 import nacl from 'tweetnacl'

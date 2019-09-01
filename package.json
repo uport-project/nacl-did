@@ -2,10 +2,10 @@
   "name": "nacl-did",
   "version": "0.4.0",
   "description": "Resolve and manage DIDs using NaCL crypto suites",
-  "main": "lib/register.umd.js",
-  "module": "lib/register.modern.js",
-  "types": "lib/register.d.ts",
-  "source": "src/register.ts",
+  "main": "lib/nacldid.umd.js",
+  "module": "lib/nacldid.modern.js",
+  "types": "lib/nacldid.d.ts",
+  "source": "src/nacldid.ts",
   "author": "Pelle Braendgaard <pelle.braendgaard@consensys.net>",
   "files": [
     "lib",
@@ -33,7 +33,7 @@
     "test:ci": "./node_modules/.bin/jest -u --coverage && cat ./coverage/lcov.info | ./node_modules/.bin/codacy-coverage -v",
     "dev": "./node_modules/.bin/microbundle --watch",
     "format": "prettier",
-    "build:docs": "./node_modules/.bin/typedoc --theme markdown --out docs/ src/register.ts ./index.d.ts",
+    "build:docs": "./node_modules/.bin/typedoc --theme markdown --out docs/ src/nacldid.ts ./index.d.ts",
     "prepare": "npm run build"
   },
   "devDependencies": {

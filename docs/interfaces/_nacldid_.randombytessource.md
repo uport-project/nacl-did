@@ -1,6 +1,6 @@
 **[nacl-did](../README.md)**
 
-[Globals](../globals.md) › ["register"](../modules/_register_.md) › [RandomBytesSource](_register_.randombytessource.md)
+[Globals](../globals.md) › ["nacldid"](../modules/_nacldid_.md) › [RandomBytesSource](_nacldid_.randombytessource.md)
 
 # Interface: RandomBytesSource
 
@@ -14,7 +14,7 @@ Implement this to use a custom async random source
 
 ▸ (`length`: number): *Promise‹Uint8Array›*
 
-*Defined in [register.ts:52](https://github.com/uport-project/nacl-did/blob/450728f/src/register.ts#L52)*
+*Defined in [nacldid.ts:52](https://github.com/uport-project/nacl-did/blob/88c8e33/src/nacldid.ts#L52)*
 
 Implement this to use a custom async random source
 
