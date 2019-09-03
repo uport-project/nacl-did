@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/nacl-did
     docker:
-      - image: circleci/node:8
+      - image: circleci/node:current
     steps:
       - checkout
 
