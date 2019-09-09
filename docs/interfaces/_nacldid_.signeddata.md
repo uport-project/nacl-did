@@ -22,7 +22,7 @@
 
 • **data**: *string | Uint8Array*
 
-*Defined in [nacldid.ts:33](https://github.com/uport-project/nacl-did/blob/88c8e33/src/nacldid.ts#L33)*
+*Defined in [nacldid.ts:33](https://github.com/uport-project/nacl-did/blob/417d425/src/nacldid.ts#L33)*
 
 ___
 
@@ -30,7 +30,7 @@ ___
 
 • **signature**: *Uint8Array*
 
-*Defined in [nacldid.ts:34](https://github.com/uport-project/nacl-did/blob/88c8e33/src/nacldid.ts#L34)*
+*Defined in [nacldid.ts:34](https://github.com/uport-project/nacl-did/blob/417d425/src/nacldid.ts#L34)*
 
 ___
 
@@ -38,4 +38,4 @@ ___
 
 • **signer**: *string*
 
-*Defined in [nacldid.ts:32](https://github.com/uport-project/nacl-did/blob/88c8e33/src/nacldid.ts#L32)*
+*Defined in [nacldid.ts:32](https://github.com/uport-project/nacl-did/blob/417d425/src/nacldid.ts#L32)*
