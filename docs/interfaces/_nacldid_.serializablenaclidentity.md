@@ -21,7 +21,7 @@
 
 • **did**: *string*
 
-*Defined in [nacldid.ts:27](https://github.com/uport-project/nacl-did/blob/417d425/src/nacldid.ts#L27)*
+*Defined in [nacldid.ts:27](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L27)*
 
 ___
 
@@ -29,4 +29,4 @@ ___
 
 • **privateKey**: *string*
 
-*Defined in [nacldid.ts:28](https://github.com/uport-project/nacl-did/blob/417d425/src/nacldid.ts#L28)*
+*Defined in [nacldid.ts:28](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L28)*

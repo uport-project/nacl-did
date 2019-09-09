@@ -21,7 +21,7 @@
 
 • **alg**: *string*
 
-*Defined in [nacldid.ts:39](https://github.com/uport-project/nacl-did/blob/417d425/src/nacldid.ts#L39)*
+*Defined in [nacldid.ts:39](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L39)*
 
 ___
 
@@ -29,4 +29,4 @@ ___
 
 • **type**: *string*
 
-*Defined in [nacldid.ts:38](https://github.com/uport-project/nacl-did/blob/417d425/src/nacldid.ts#L38)*
+*Defined in [nacldid.ts:38](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L38)*

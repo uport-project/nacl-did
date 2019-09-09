@@ -1,6 +1,6 @@
 {
   "name": "nacl-did",
-  "version": "0.4.0",
+  "version": "1.0.0",
   "description": "Resolve and manage DIDs using NaCL crypto suites",
   "main": "lib/nacldid.umd.js",
   "module": "lib/nacldid.modern.js",
