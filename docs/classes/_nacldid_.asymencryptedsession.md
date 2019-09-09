@@ -37,7 +37,7 @@
 
 *Overrides [EncryptedSession](_nacldid_.encryptedsession.md).[constructor](_nacldid_.encryptedsession.md#constructor)*
 
-*Defined in [nacldid.ts:272](https://github.com/uport-project/nacl-did/blob/417d425/src/nacldid.ts#L272)*
+*Defined in [nacldid.ts:272](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L272)*
 
 **Parameters:**
 
@@ -56,7 +56,7 @@ Name | Type |
 
 • **from**: *string*
 
-*Defined in [nacldid.ts:269](https://github.com/uport-project/nacl-did/blob/417d425/src/nacldid.ts#L269)*
+*Defined in [nacldid.ts:269](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L269)*
 
 ___
 
@@ -64,7 +64,7 @@ ___
 
 • **sharedKey**: *Uint8Array*
 
-*Defined in [nacldid.ts:272](https://github.com/uport-project/nacl-did/blob/417d425/src/nacldid.ts#L272)*
+*Defined in [nacldid.ts:272](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L272)*
 
 ___
 
@@ -72,7 +72,7 @@ ___
 
 • **template**: *[EncryptedTemplate](../interfaces/_nacldid_.encryptedtemplate.md)*
 
-*Defined in [nacldid.ts:271](https://github.com/uport-project/nacl-did/blob/417d425/src/nacldid.ts#L271)*
+*Defined in [nacldid.ts:271](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L271)*
 
 ___
 
@@ -82,7 +82,7 @@ ___
 
 *Inherited from [EncryptedSession](_nacldid_.encryptedsession.md).[to](_nacldid_.encryptedsession.md#to)*
 
-*Defined in [nacldid.ts:261](https://github.com/uport-project/nacl-did/blob/417d425/src/nacldid.ts#L261)*
+*Defined in [nacldid.ts:261](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L261)*
 
 ___
 
@@ -90,7 +90,7 @@ ___
 
 • **toPublicKey**: *string*
 
-*Defined in [nacldid.ts:270](https://github.com/uport-project/nacl-did/blob/417d425/src/nacldid.ts#L270)*
+*Defined in [nacldid.ts:270](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L270)*
 
 ## Methods
 
@@ -100,7 +100,7 @@ ___
 
 *Overrides [EncryptedSession](_nacldid_.encryptedsession.md).[decrypt](_nacldid_.encryptedsession.md#abstract-decrypt)*
 
-*Defined in [nacldid.ts:304](https://github.com/uport-project/nacl-did/blob/417d425/src/nacldid.ts#L304)*
+*Defined in [nacldid.ts:304](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L304)*
 
 Decrypt data from counter party or myself
 
@@ -126,7 +126,7 @@ ___
 
 *Overrides [EncryptedSession](_nacldid_.encryptedsession.md).[encrypt](_nacldid_.encryptedsession.md#abstract-encrypt)*
 
-*Defined in [nacldid.ts:291](https://github.com/uport-project/nacl-did/blob/417d425/src/nacldid.ts#L291)*
+*Defined in [nacldid.ts:291](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L291)*
 
 Encrypt data to recipient
 

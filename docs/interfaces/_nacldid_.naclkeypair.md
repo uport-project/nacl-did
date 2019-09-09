@@ -21,7 +21,7 @@
 
 • **publicKey**: *Uint8Array*
 
-*Defined in [nacldid.ts:22](https://github.com/uport-project/nacl-did/blob/417d425/src/nacldid.ts#L22)*
+*Defined in [nacldid.ts:22](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L22)*
 
 ___
 
@@ -29,4 +29,4 @@ ___
 
 • **secretKey**: *Uint8Array*
 
-*Defined in [nacldid.ts:23](https://github.com/uport-project/nacl-did/blob/417d425/src/nacldid.ts#L23)*
+*Defined in [nacldid.ts:23](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L23)*

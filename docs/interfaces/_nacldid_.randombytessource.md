@@ -14,7 +14,7 @@ Implement this to use a custom async random source
 
 ▸ (`length`: number): *Promise‹Uint8Array›*
 
-*Defined in [nacldid.ts:52](https://github.com/uport-project/nacl-did/blob/417d425/src/nacldid.ts#L52)*
+*Defined in [nacldid.ts:52](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L52)*
 
 Implement this to use a custom async random source
 
