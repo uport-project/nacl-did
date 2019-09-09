@@ -21,7 +21,7 @@
 
 • **issuer**: *string*
 
-*Defined in [nacldid.ts:43](https://github.com/uport-project/nacl-did/blob/88c8e33/src/nacldid.ts#L43)*
+*Defined in [nacldid.ts:43](https://github.com/uport-project/nacl-did/blob/417d425/src/nacldid.ts#L43)*
 
 ___
 
@@ -29,4 +29,4 @@ ___
 
 • **payload**: *any*
 
-*Defined in [nacldid.ts:44](https://github.com/uport-project/nacl-did/blob/88c8e33/src/nacldid.ts#L44)*
+*Defined in [nacldid.ts:44](https://github.com/uport-project/nacl-did/blob/417d425/src/nacldid.ts#L44)*

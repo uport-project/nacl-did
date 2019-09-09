@@ -33,7 +33,7 @@
 
 \+ **new EncryptedSession**(`to`: string): *[EncryptedSession](_nacldid_.encryptedsession.md)*
 
-*Defined in [nacldid.ts:261](https://github.com/uport-project/nacl-did/blob/88c8e33/src/nacldid.ts#L261)*
+*Defined in [nacldid.ts:261](https://github.com/uport-project/nacl-did/blob/417d425/src/nacldid.ts#L261)*
 
 **Parameters:**
 
@@ -49,7 +49,7 @@ Name | Type |
 
 • **to**: *string*
 
-*Defined in [nacldid.ts:261](https://github.com/uport-project/nacl-did/blob/88c8e33/src/nacldid.ts#L261)*
+*Defined in [nacldid.ts:261](https://github.com/uport-project/nacl-did/blob/417d425/src/nacldid.ts#L261)*
 
 ## Methods
 
@@ -57,7 +57,7 @@ Name | Type |
 
 ▸ **decrypt**(`encrypted`: [Encrypted](../interfaces/_nacldid_.encrypted.md)): *string*
 
-*Defined in [nacldid.ts:266](https://github.com/uport-project/nacl-did/blob/88c8e33/src/nacldid.ts#L266)*
+*Defined in [nacldid.ts:266](https://github.com/uport-project/nacl-did/blob/417d425/src/nacldid.ts#L266)*
 
 **Parameters:**
 
@@ -73,7 +73,7 @@ ___
 
 ▸ **encrypt**(`data`: string | Uint8Array): *Promise‹[Encrypted](../interfaces/_nacldid_.encrypted.md)›*
 
-*Defined in [nacldid.ts:265](https://github.com/uport-project/nacl-did/blob/88c8e33/src/nacldid.ts#L265)*
+*Defined in [nacldid.ts:265](https://github.com/uport-project/nacl-did/blob/417d425/src/nacldid.ts#L265)*
 
 **Parameters:**
 
