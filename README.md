@@ -66,7 +66,7 @@ A DID Document for the `did:nacl:Md8JiMIwsapml_FtQ2ngnGftNP5UmVCAUuhnLyAsPxI` wo
   }],
   authentication: [{
        type: 'ED25519SigningAuthentication',
-       publicKey: `did:nacl:Md8JiMIwsapml_FtQ2ngnGftNP5UmVCAUuhnLyAsPxI=#key1`
+       publicKey: `did:nacl:Md8JiMIwsapml_FtQ2ngnGftNP5UmVCAUuhnLyAsPxI#key1`
   }]
 }
 ```
