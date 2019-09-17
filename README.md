@@ -11,6 +11,8 @@ source: "https://github.com/uport-project/nacl-did/blob/develop/README.md"
 [![CircleCI](https://circleci.com/gh/uport-project/nacl-did.svg?style=svg)](https://circleci.com/gh/uport-project/nacl-did)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/8ce0d076d47147deb76bc7bb43df9216)](https://app.codacy.com/app/pelle/nacl-did?utm_source=github.com&utm_medium=referral&utm_content=uport-project/nacl-did&utm_campaign=Badge_Grade_Dashboard)
 
+[FAQ and helpdesk support](http://bit.ly/uPort_helpdesk)
+
 This library is intended to use cryptographic keys from [NaCL](http://nacl.cr.yp.to) cryptographic suite as [Decentralized Identifiers](https://w3c-ccg.github.io/did-spec/#decentralized-identifiers-dids) and generate an associated [DID Document](https://w3c-ccg.github.io/did-spec/#did-documents).
 
 Motivation. There is a need for non updateable DID's for use in IOT and other applications, where lack of network, size of code base and other such concerns are paramount to adoption. These concerns need to be addressed while not lowering the overall security guarantees.
