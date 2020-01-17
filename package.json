@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "did-resolver": "^1.0.0",
-    "ed2curve": "git+https://github.com/uport-project/ed2curve-js.git",
+    "ed2curve": "^0.3.0",
     "tweetnacl": "^1.0.0",
     "tweetnacl-util": "^0.15.0"
   },
