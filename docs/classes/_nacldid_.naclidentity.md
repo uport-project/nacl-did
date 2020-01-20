@@ -42,7 +42,7 @@ Encapsulates the functionality of an identity using the `nacl-did` method
 
 \+ **new NaCLIdentity**(`kp`: [NaCLKeyPair](../interfaces/_nacldid_.naclkeypair.md), `didResolver?`: Resolver): *[NaCLIdentity](_nacldid_.naclidentity.md)*
 
-*Defined in [nacldid.ts:119](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L119)*
+*Defined in [nacldid.ts:132](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L132)*
 
 Create a new NaCL Identity for a KeyPair
 
@@ -61,7 +61,7 @@ Name | Type | Description |
 
 • **did**: *string*
 
-*Defined in [nacldid.ts:114](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L114)*
+*Defined in [nacldid.ts:127](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L127)*
 
 ___
 
@@ -69,7 +69,7 @@ ___
 
 • **encPrivateKey**: *Uint8Array*
 
-*Defined in [nacldid.ts:118](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L118)*
+*Defined in [nacldid.ts:131](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L131)*
 
 ___
 
@@ -77,7 +77,7 @@ ___
 
 • **encPublicKey**: *Uint8Array*
 
-*Defined in [nacldid.ts:116](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L116)*
+*Defined in [nacldid.ts:129](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L129)*
 
 ___
 
@@ -85,7 +85,7 @@ ___
 
 • **privateKey**: *Uint8Array*
 
-*Defined in [nacldid.ts:117](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L117)*
+*Defined in [nacldid.ts:130](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L130)*
 
 ___
 
@@ -93,7 +93,7 @@ ___
 
 • **publicKey**: *Uint8Array*
 
-*Defined in [nacldid.ts:115](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L115)*
+*Defined in [nacldid.ts:128](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L128)*
 
 ___
 
@@ -101,7 +101,7 @@ ___
 
 • **resolver**: *Resolver*
 
-*Defined in [nacldid.ts:119](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L119)*
+*Defined in [nacldid.ts:132](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L132)*
 
 ## Methods
 
@@ -109,7 +109,7 @@ ___
 
 ▸ **createJWT**(`payload`: Object): *string*
 
-*Defined in [nacldid.ts:166](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L166)*
+*Defined in [nacldid.ts:183](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L183)*
 
 Creates a signed JWT using the following header `{ typ: 'JWT', alg: 'Ed25519' }`
 
@@ -127,7 +127,7 @@ ___
 
 ▸ **decrypt**(`__namedParameters`: object): *string*
 
-*Defined in [nacldid.ts:244](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L244)*
+*Defined in [nacldid.ts:291](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L291)*
 
 **Parameters:**
 
@@ -149,7 +149,7 @@ ___
 
 ▸ **encrypt**(`to`: string, `data`: string | Uint8Array): *Promise‹[Encrypted](../interfaces/_nacldid_.encrypted.md)›*
 
-*Defined in [nacldid.ts:218](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L218)*
+*Defined in [nacldid.ts:256](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L256)*
 
 Encrypt a single message to send to a recipient
 
@@ -168,7 +168,7 @@ ___
 
 ▸ **openSession**(`to`: string, `overridePublicKey`: boolean | string): *Promise‹[EncryptedSession](_nacldid_.encryptedsession.md)›*
 
-*Defined in [nacldid.ts:198](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L198)*
+*Defined in [nacldid.ts:225](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L225)*
 
 Opens an efficient session for encrypting and decrypting messages between this and another DID.
 
@@ -193,7 +193,7 @@ ___
 
 ▸ **resolveEncryptionPublicKey**(`did`: string): *Promise‹Uint8Array | undefined›*
 
-*Defined in [nacldid.ts:173](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L173)*
+*Defined in [nacldid.ts:195](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L195)*
 
 **Parameters:**
 
@@ -209,7 +209,7 @@ ___
 
 ▸ **sign**(`data`: string | Uint8Array): *[SignedData](../interfaces/_nacldid_.signeddata.md)*
 
-*Defined in [nacldid.ts:146](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L146)*
+*Defined in [nacldid.ts:159](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L159)*
 
 Signs data and returns the data, did and signature
 
@@ -227,7 +227,7 @@ ___
 
 ▸ **toJSON**(): *[SerializableNaCLIdentity](../interfaces/_nacldid_.serializablenaclidentity.md)*
 
-*Defined in [nacldid.ts:138](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L138)*
+*Defined in [nacldid.ts:151](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L151)*
 
 Serializes NaclDID to just it's base64 encoded private key and DID
 
@@ -239,7 +239,7 @@ ___
 
 ▸ **verify**(`signed`: [SignedData](../interfaces/_nacldid_.signeddata.md)): *boolean*
 
-*Defined in [nacldid.ts:158](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L158)*
+*Defined in [nacldid.ts:171](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L171)*
 
 Verifies that Signed Data was signed by this identity
 
