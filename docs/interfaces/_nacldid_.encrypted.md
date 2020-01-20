@@ -27,7 +27,7 @@
 
 • **ciphertext**: *string*
 
-*Defined in [nacldid.ts:18](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L18)*
+*Defined in [nacldid.ts:18](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L18)*
 
 ___
 
@@ -37,7 +37,7 @@ ___
 
 *Inherited from [EncryptedTemplate](_nacldid_.encryptedtemplate.md).[from](_nacldid_.encryptedtemplate.md#optional-from)*
 
-*Defined in [nacldid.ts:11](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L11)*
+*Defined in [nacldid.ts:11](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L11)*
 
 ___
 
@@ -45,7 +45,7 @@ ___
 
 • **nonce**: *string*
 
-*Defined in [nacldid.ts:17](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L17)*
+*Defined in [nacldid.ts:17](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L17)*
 
 ___
 
@@ -55,7 +55,7 @@ ___
 
 *Inherited from [EncryptedTemplate](_nacldid_.encryptedtemplate.md).[to](_nacldid_.encryptedtemplate.md#to)*
 
-*Defined in [nacldid.ts:10](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L10)*
+*Defined in [nacldid.ts:10](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L10)*
 
 ___
 
@@ -65,7 +65,7 @@ ___
 
 *Inherited from [EncryptedTemplate](_nacldid_.encryptedtemplate.md).[toPublicKey](_nacldid_.encryptedtemplate.md#optional-topublickey)*
 
-*Defined in [nacldid.ts:13](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L13)*
+*Defined in [nacldid.ts:13](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L13)*
 
 ___
 
@@ -75,4 +75,4 @@ ___
 
 *Inherited from [EncryptedTemplate](_nacldid_.encryptedtemplate.md).[version](_nacldid_.encryptedtemplate.md#version)*
 
-*Defined in [nacldid.ts:12](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L12)*
+*Defined in [nacldid.ts:12](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L12)*
