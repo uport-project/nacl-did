@@ -5,3 +5,4 @@ coverage
 .DS_Store
 kitimat.config.js
 .rts2_cache_*
+.idea/

@@ -57,15 +57,17 @@
 
 • **ASYM_CIPHER_VERSION**: *"x25519-xsalsa20-poly1305"* = "x25519-xsalsa20-poly1305"
 
-*Defined in [nacldid.ts:6](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L6)*
+*Defined in [nacldid.ts:6](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L6)*
 
 ___
 
 ### `Const` ENCODED_JOSE_HEADER
 
-• **ENCODED_JOSE_HEADER**: *string* =  encodeBase64Url(naclutil.decodeUTF8(JSON.stringify(JOSE_HEADER)))
+• **ENCODED_JOSE_HEADER**: *string* =  encodeBase64Url(
+  naclutil.decodeUTF8(JSON.stringify(JOSE_HEADER))
+)
 
-*Defined in [nacldid.ts:108](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L108)*
+*Defined in [nacldid.ts:119](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L119)*
 
 ___
 
@@ -73,7 +75,7 @@ ___
 
 • **SYM_CIPHER_VERSION**: *"xsalsa20-poly1305"* = "xsalsa20-poly1305"
 
-*Defined in [nacldid.ts:7](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L7)*
+*Defined in [nacldid.ts:7](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L7)*
 
 ___
 
@@ -81,7 +83,7 @@ ___
 
 • **randomBytes**: *[RandomBytesSource](../interfaces/_nacldid_.randombytessource.md)* =  naclRandomBytes
 
-*Defined in [nacldid.ts:60](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L60)*
+*Defined in [nacldid.ts:60](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L60)*
 
 ## Functions
 
@@ -89,7 +91,7 @@ ___
 
 ▸ **createIdentity**(`didResolver?`: Resolver): *[NaCLIdentity](../classes/_nacldid_.naclidentity.md)*
 
-*Defined in [nacldid.ts:379](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L379)*
+*Defined in [nacldid.ts:477](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L477)*
 
 Create a new NaCLIDentity
 
@@ -107,7 +109,7 @@ ___
 
 ▸ **decodeBase64Url**(`base64url`: string): *Uint8Array*
 
-*Defined in [nacldid.ts:103](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L103)*
+*Defined in [nacldid.ts:110](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L110)*
 
 Decodes a base64url encoded string into a Uint8Array (byte array)
 
@@ -125,7 +127,7 @@ ___
 
 ▸ **didToEncPubKey**(`did`: string): *Uint8Array*
 
-*Defined in [nacldid.ts:371](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L371)*
+*Defined in [nacldid.ts:469](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L469)*
 
 **Parameters:**
 
@@ -141,7 +143,7 @@ ___
 
 ▸ **didToSignPubKey**(`did`: string): *Uint8Array*
 
-*Defined in [nacldid.ts:366](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L366)*
+*Defined in [nacldid.ts:464](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L464)*
 
 **Parameters:**
 
@@ -157,7 +159,7 @@ ___
 
 ▸ **encodeBase64Url**(`data`: Uint8Array): *string*
 
-*Defined in [nacldid.ts:85](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L85)*
+*Defined in [nacldid.ts:85](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L85)*
 
 Encode a byte array into a base64 url encoded string
 
@@ -175,7 +177,7 @@ ___
 
 ▸ **loadIdentity**(`sId`: [SerializableNaCLIdentity](../interfaces/_nacldid_.serializablenaclidentity.md), `didResolver?`: Resolver): *[NaCLIdentity](../classes/_nacldid_.naclidentity.md)*
 
-*Defined in [nacldid.ts:387](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L387)*
+*Defined in [nacldid.ts:485](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L485)*
 
 Instantiates a Serialized NaCLIDentity
 
@@ -194,7 +196,7 @@ ___
 
 ▸ **naclRandomBytes**(`length`: number): *Promise‹Uint8Array›*
 
-*Defined in [nacldid.ts:56](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L56)*
+*Defined in [nacldid.ts:56](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L56)*
 
 **Parameters:**
 
@@ -210,7 +212,7 @@ ___
 
 ▸ **normalizeClearData**(`data`: string | Uint8Array): *Uint8Array*
 
-*Defined in [nacldid.ts:73](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L73)*
+*Defined in [nacldid.ts:73](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L73)*
 
 Takes data which could be a string or a Uint8Array and normalizes it into a Uint8Array
 
@@ -228,7 +230,7 @@ ___
 
 ▸ **pad**(`base64url`: string): *string*
 
-*Defined in [nacldid.ts:89](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L89)*
+*Defined in [nacldid.ts:93](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L93)*
 
 **Parameters:**
 
@@ -244,7 +246,7 @@ ___
 
 ▸ **resolver**(`did`: string, `parsed`: ParsedDID): *Promise‹DIDDocument | null›*
 
-*Defined in [nacldid.ts:396](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L396)*
+*Defined in [nacldid.ts:501](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L501)*
 
 Registers `nacl` DID resolver
 
@@ -263,7 +265,7 @@ ___
 
 ▸ **setRandomBytesSource**(`source`: [RandomBytesSource](../interfaces/_nacldid_.randombytessource.md)): *void*
 
-*Defined in [nacldid.ts:66](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L66)*
+*Defined in [nacldid.ts:66](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L66)*
 
 Sets a system wide random byte source
 
@@ -281,7 +283,7 @@ ___
 
 ▸ **verifyJWT**(`jwt`: string): *[VerifiedJWT](../interfaces/_nacldid_.verifiedjwt.md)*
 
-*Defined in [nacldid.ts:347](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L347)*
+*Defined in [nacldid.ts:436](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L436)*
 
 Verify JWT of type `{ typ: 'JWT', alg: 'Ed25519' }`
 
@@ -299,7 +301,7 @@ ___
 
 ▸ **verifySignature**(`signed`: [SignedData](../interfaces/_nacldid_.signeddata.md)): *boolean*
 
-*Defined in [nacldid.ts:338](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L338)*
+*Defined in [nacldid.ts:423](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L423)*
 
 Verify Signature of Signed Data
 
@@ -317,16 +319,16 @@ Name | Type | Description |
 
 ### ▪ **JOSE_HEADER**: *object*
 
-*Defined in [nacldid.ts:107](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L107)*
+*Defined in [nacldid.ts:118](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L118)*
 
 ###  alg
 
 • **alg**: *string* = "Ed25519"
 
-*Defined in [nacldid.ts:107](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L107)*
+*Defined in [nacldid.ts:118](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L118)*
 
 ###  typ
 
 • **typ**: *string* = "JWT"
 
-*Defined in [nacldid.ts:107](https://github.com/uport-project/nacl-did/blob/ce82fa9/src/nacldid.ts#L107)*
+*Defined in [nacldid.ts:118](https://github.com/uport-project/nacl-did/blob/c90edba/src/nacldid.ts#L118)*
